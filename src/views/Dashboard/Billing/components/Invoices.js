@@ -6,36 +6,40 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import InvoicesRow from "components/Tables/InvoicesRow";
 import React from "react";
+import PropTypes from "prop-types";
 
 const Invoices = ({ title, data }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   return (
     <Card
-      p='22px'
+      p="22px"
       my={{ sm: "24px", lg: "0px" }}
-      ms={{ sm: "0px", lg: "24px" }}>
+      ms={{ sm: "0px", lg: "24px" }}
+    >
       <CardHeader>
-        <Flex justify='space-between' align='center' mb='1rem' w='100%'>
-          <Text fontSize='lg' color={textColor} fontWeight='bold'>
+        <Flex justify="space-between" align="center" mb="1rem" w="100%">
+          <Text fontSize="lg" color={textColor} fontWeight="bold">
             {title}
           </Text>
           <Button
-            colorScheme='teal'
-            borderColor='teal.300'
-            color='teal.300'
-            variant='outline'
-            fontSize='xs'
-            p='8px 32px'>
+            colorScheme="teal"
+            borderColor="teal.300"
+            color="teal.300"
+            variant="outline"
+            fontSize="xs"
+            p="8px 32px"
+          >
             VIEW ALL
           </Button>
         </Flex>
       </CardHeader>
       <CardBody>
-        <Flex direction='column' w='100%'>
-          {data.map((row) => {
+        <Flex direction="column" w="100%">
+          {data.map((row, index) => {
             return (
               <InvoicesRow
+                key={index}
                 date={row.date}
                 code={row.code}
                 price={row.price}
@@ -48,6 +52,11 @@ const Invoices = ({ title, data }) => {
       </CardBody>
     </Card>
   );
+};
+
+Invoices.propTypes = {
+  title: PropTypes.string,
+  data: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Invoices;

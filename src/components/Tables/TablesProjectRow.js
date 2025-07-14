@@ -10,8 +10,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FaEllipsisV } from "react-icons/fa";
+import PropTypes from "prop-types";
 
-function DashboardTableRow(props) {
+function TablesProjectRow(props) {
   const { logo, name, status, budget, progression } = props;
   const textColor = useColorModeValue("gray.700", "white");
   return (
@@ -64,4 +65,12 @@ function DashboardTableRow(props) {
   );
 }
 
-export default DashboardTableRow;
+TablesProjectRow.propTypes = {
+  logo: PropTypes.elementType.isRequired,
+  name: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  budget: PropTypes.string.isRequired,
+  progression: PropTypes.number.isRequired,
+};
+
+export default TablesProjectRow;

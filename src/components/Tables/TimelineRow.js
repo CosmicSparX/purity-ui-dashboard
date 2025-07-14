@@ -1,5 +1,6 @@
 import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
+import PropTypes from "prop-types";
 
 function TimelineRow(props) {
   const { logo, title, date, color, index, arrLength } = props;
@@ -38,5 +39,14 @@ function TimelineRow(props) {
     </Flex>
   );
 }
+
+TimelineRow.propTypes = {
+  logo: PropTypes.elementType.isRequired,
+  title: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  arrLength: PropTypes.number.isRequired,
+};
 
 export default TimelineRow;

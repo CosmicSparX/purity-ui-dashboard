@@ -9,8 +9,7 @@ import {
 // assets
 import peopleImage from "assets/img/people-image.png";
 import logoChakra from "assets/svg/logo-white.svg";
-import BarChart from "components/Charts/BarChart";
-import LineChart from "components/Charts/LineChart";
+
 // Custom icons
 import {
   CartIcon,
@@ -34,8 +33,8 @@ export default function Dashboard() {
   const iconBoxInside = useColorModeValue("white", "white");
 
   return (
-    <Flex flexDirection='column' pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px'>
+    <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
+      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
         <MiniStatistics
           title={"إجمالي المبيعات"}
           amount={"$53,000"}
@@ -64,8 +63,9 @@ export default function Dashboard() {
       <Grid
         templateColumns={{ md: "1fr", lg: "1.8fr 1.2fr" }}
         templateRows={{ md: "1fr auto", lg: "1fr" }}
-        my='26px'
-        gap='24px'>
+        my="26px"
+        gap="24px"
+      >
         <BuiltByDevelopers
           title={"بناها المطورون"}
           name={"لوحة معلومات Purity UI"}
@@ -75,7 +75,7 @@ export default function Dashboard() {
           image={
             <Image
               src={logoChakra}
-              alt='chakra image'
+              alt="chakra image"
               minWidth={{ md: "300px", lg: "auto" }}
             />
           }
@@ -91,23 +91,17 @@ export default function Dashboard() {
       <Grid
         templateColumns={{ sm: "1fr", lg: "1.3fr 1.7fr" }}
         templateRows={{ sm: "repeat(2, 1fr)", lg: "1fr" }}
-        gap='24px'
-        mb={{ lg: "26px" }}>
-        <ActiveUsers
-          title={"المستخدمين النشطين"}
-          percentage={23}
-          chart={<BarChart />}
-        />
-        <SalesOverview
-          title={"نظرة عامة على المبيعات"}
-          percentage={5}
-          chart={<LineChart />}
-        />
+        gap="24px"
+        mb={{ lg: "26px" }}
+      >
+        <ActiveUsers title={"المستخدمين النشطين"} percentage={23} />
+        <SalesOverview title={"نظرة عامة على المبيعات"} percentage={5} />
       </Grid>
       <Grid
         templateColumns={{ sm: "1fr", md: "1fr 1fr", lg: "2fr 1fr" }}
         templateRows={{ sm: "1fr auto", md: "1fr", lg: "1fr" }}
-        gap='24px'>
+        gap="24px"
+      >
         <Projects
           title={"المشاريع"}
           amount={30}

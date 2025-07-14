@@ -1,5 +1,6 @@
 import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
+import PropTypes from "prop-types";
 
 function TransactionRow(props) {
   const textColor = useColorModeValue("gray.700", "white");
@@ -50,7 +51,7 @@ function TransactionRow(props) {
             ? "green.400"
             : price[0] === "-"
             ? "red.400"
-            : { textColor }
+            : textColor
         }
       >
         <Text fontSize={{ sm: "md", md: "lg", lg: "md" }} fontWeight="bold">
@@ -60,5 +61,12 @@ function TransactionRow(props) {
     </Flex>
   );
 }
+
+TransactionRow.propTypes = {
+  name: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  logo: PropTypes.elementType.isRequired,
+  price: PropTypes.string.isRequired,
+};
 
 export default TransactionRow;

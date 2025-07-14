@@ -8,7 +8,6 @@ import {
   DrawerContent,
   DrawerHeader,
   Flex,
-  Icon,
   Link,
   Switch,
   Text,
@@ -22,13 +21,21 @@ import React, { useState } from "react";
 import { FaTwitter, FaFacebook } from "react-icons/fa";
 
 export default function Configurator(props) {
-  const { secondary, isOpen, onClose, fixed, ...rest } = props;
-  const [switched, setSwitched] = useState(props.isChecked);
+  const {
+    secondary,
+    isOpen,
+    onClose,
+    onTransparent,
+    onOpaque,
+    onSwitch,
+    isChecked,
+  } = props;
+  const [switched, setSwitched] = useState(isChecked);
 
   const { colorMode, toggleColorMode } = useColorMode();
   // Chakra Color Mode
   let fixedDisplay = "flex";
-  if (props.secondary) {
+  if (secondary) {
     fixedDisplay = "none";
   }
 
@@ -44,8 +51,8 @@ export default function Configurator(props) {
   return (
     <>
       <Drawer
-        isOpen={props.isOpen}
-        onClose={props.onClose}
+        isOpen={isOpen}
+        onClose={onClose}
         placement={document.documentElement.dir === "rtl" ? "left" : "right"}
         finalFocusRef={settingsRef}
         blockScrollOnMount={false}
@@ -80,7 +87,7 @@ export default function Configurator(props) {
                     color="teal.300"
                     variant="outline"
                     fontSize="xs"
-                    onClick={props.onTransparent}
+                    onClick={onTransparent}
                   >
                     Transparent
                   </Button>
@@ -93,7 +100,7 @@ export default function Configurator(props) {
                     _hover="teal.300"
                     color="white"
                     fontSize="xs"
-                    onClick={props.onOpaque}
+                    onClick={onOpaque}
                   >
                     Opaque
                   </Button>
@@ -110,12 +117,12 @@ export default function Configurator(props) {
                 <Switch
                   colorScheme="teal"
                   isChecked={switched}
-                  onChange={(event) => {
+                  onChange={() => {
                     if (switched === true) {
-                      props.onSwitch(false);
+                      onSwitch(false);
                       setSwitched(false);
                     } else {
-                      props.onSwitch(true);
+                      onSwitch(true);
                       setSwitched(true);
                     }
                   }}
@@ -234,4 +241,8 @@ Configurator.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   fixed: PropTypes.bool,
+  onTransparent: PropTypes.func,
+  onOpaque: PropTypes.func,
+  onSwitch: PropTypes.func,
+  isChecked: PropTypes.bool,
 };

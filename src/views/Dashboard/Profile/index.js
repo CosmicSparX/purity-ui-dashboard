@@ -13,14 +13,14 @@ import Projects from "./components/Projects";
 
 function Profile() {
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
+
   const bgProfile = useColorModeValue(
     "hsla(0,0%,100%,.8)",
     "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
   );
 
   return (
-    <Flex direction='column'>
+    <Flex direction="column">
       <Header
         backgroundHeader={ProfileBgImage}
         backgroundProfile={bgProfile}
@@ -30,19 +30,19 @@ function Profile() {
         tabs={[
           {
             name: "OVERVIEW",
-            icon: <FaCube w='100%' h='100%' />,
+            icon: <FaCube w="100%" h="100%" />,
           },
           {
             name: "TEAMS",
-            icon: <IoDocumentsSharp w='100%' h='100%' />,
+            icon: <IoDocumentsSharp w="100%" h="100%" />,
           },
           {
             name: "PROJECTS",
-            icon: <FaPenFancy w='100%' h='100%' />,
+            icon: <FaPenFancy w="100%" h="100%" />,
           },
         ]}
       />
-      <Grid templateColumns={{ sm: "1fr", xl: "repeat(3, 1fr)" }} gap='22px'>
+      <Grid templateColumns={{ sm: "1fr", xl: "repeat(3, 1fr)" }} gap="22px">
         <PlatformSettings
           title={"Platform Settings"}
           subtitle1={"ACCOUNT"}

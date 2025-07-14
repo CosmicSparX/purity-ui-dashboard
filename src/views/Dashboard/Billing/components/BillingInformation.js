@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 // Chakra imports
 import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
 // Custom components
@@ -11,17 +12,18 @@ const BillingInformation = ({ title, data }) => {
   const textColor = useColorModeValue("gray.700", "white");
   return (
     <Card my={{ lg: "24px" }} me={{ lg: "24px" }}>
-      <Flex direction='column'>
-        <CardHeader py='12px'>
-          <Text color={textColor} fontSize='lg' fontWeight='bold'>
+      <Flex direction="column">
+        <CardHeader py="12px">
+          <Text color={textColor} fontSize="lg" fontWeight="bold">
             {title}
           </Text>
         </CardHeader>
         <CardBody>
-          <Flex direction='column' w='100%'>
-            {data.map((row) => {
+          <Flex direction="column" w="100%">
+            {data.map((row, index) => {
               return (
                 <BillingRow
+                  key={index}
                   name={row.name}
                   company={row.company}
                   email={row.email}
@@ -34,6 +36,11 @@ const BillingInformation = ({ title, data }) => {
       </Flex>
     </Card>
   );
+};
+
+BillingInformation.propTypes = {
+  title: PropTypes.string,
+  data: PropTypes.array.isRequired,
 };
 
 export default BillingInformation;

@@ -8,6 +8,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
+import PropTypes from "prop-types";
 
 function InvoicesRow(props) {
   const textColor = useColorModeValue("gray.700", "white");
@@ -40,5 +41,13 @@ function InvoicesRow(props) {
     </Flex>
   );
 }
+
+InvoicesRow.propTypes = {
+  date: PropTypes.string.isRequired,
+  code: PropTypes.string.isRequired,
+  price: PropTypes.string.isRequired,
+  format: PropTypes.string.isRequired,
+  logo: PropTypes.elementType.isRequired,
+};
 
 export default InvoicesRow;

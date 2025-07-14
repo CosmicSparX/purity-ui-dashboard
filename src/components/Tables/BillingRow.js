@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import PropTypes from "prop-types";
 
 function BillingRow(props) {
   const textColor = useColorModeValue("gray.700", "white");
@@ -72,5 +73,12 @@ function BillingRow(props) {
     </Box>
   );
 }
+
+BillingRow.propTypes = {
+  name: PropTypes.string.isRequired,
+  company: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
+};
 
 export default BillingRow;

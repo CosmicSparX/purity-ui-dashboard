@@ -1,4 +1,6 @@
 import { Box, useStyleConfig } from "@chakra-ui/react";
+import PropTypes from "prop-types";
+
 function PanelContent(props) {
   const { variant, children, ...rest } = props;
   const styles = useStyleConfig("PanelContent", { variant });
@@ -9,5 +11,10 @@ function PanelContent(props) {
     </Box>
   );
 }
+
+PanelContent.propTypes = {
+  variant: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
 
 export default PanelContent;

@@ -14,23 +14,24 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import TablesTableRow from "components/Tables/TablesTableRow";
 import React from "react";
+import PropTypes from "prop-types";
 
 const Authors = ({ title, captions, data }) => {
   const textColor = useColorModeValue("gray.700", "white");
   return (
     <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-      <CardHeader p='6px 0px 22px 0px'>
-        <Text fontSize='xl' color={textColor} fontWeight='bold'>
+      <CardHeader p="6px 0px 22px 0px">
+        <Text fontSize="xl" color={textColor} fontWeight="bold">
           {title}
         </Text>
       </CardHeader>
       <CardBody>
-        <Table variant='simple' color={textColor}>
+        <Table variant="simple" color={textColor}>
           <Thead>
-            <Tr my='.8rem' pl='0px' color='gray.400'>
+            <Tr my=".8rem" pl="0px" color="gray.400">
               {captions.map((caption, idx) => {
                 return (
-                  <Th color='gray.400' key={idx} ps={idx === 0 ? "0px" : null}>
+                  <Th color="gray.400" key={idx} ps={idx === 0 ? "0px" : null}>
                     {caption}
                   </Th>
                 );
@@ -57,6 +58,12 @@ const Authors = ({ title, captions, data }) => {
       </CardBody>
     </Card>
   );
+};
+
+Authors.propTypes = {
+  title: PropTypes.string.isRequired,
+  captions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Authors;

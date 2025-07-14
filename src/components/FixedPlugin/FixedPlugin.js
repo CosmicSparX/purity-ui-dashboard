@@ -6,14 +6,10 @@ import PropTypes from "prop-types";
 import React from "react";
 
 export default function FixedPlugin(props) {
-  const { secondary, onChange, onSwitch, fixed, ...rest } = props;
+  const { onOpen } = props;
   // Chakra Color Mode
   let navbarIcon = useColorModeValue("gray.500", "gray.200");
   let bgButton = useColorModeValue("white", "gray.600");
-  let fixedDisplay = "flex";
-  if (props.secondary) {
-    fixedDisplay = "none";
-  }
 
   const settingsRef = React.useRef();
   return (
@@ -21,7 +17,7 @@ export default function FixedPlugin(props) {
       <Button
         h="52px"
         w="52px"
-        onClick={props.onOpen}
+        onClick={onOpen}
         bg={bgButton}
         position="fixed"
         variant="no-hover"
@@ -44,7 +40,6 @@ export default function FixedPlugin(props) {
 }
 
 FixedPlugin.propTypes = {
-  fixed: PropTypes.bool,
-  onChange: PropTypes.func,
-  onSwitch: PropTypes.func,
+  secondary: PropTypes.bool,
+  onOpen: PropTypes.func,
 };

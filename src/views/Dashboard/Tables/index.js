@@ -7,7 +7,7 @@ import { tablesTableData, dashboardTableData } from "variables/general";
 
 function Tables() {
   return (
-    <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
+    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Authors
         title={"Authors Table"}
         captions={["Author", "Function", "Status", "Employed", ""]}

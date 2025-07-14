@@ -14,15 +14,7 @@ import AdminNavbarLinks from "./AdminNavbarLinks";
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
-  const {
-    variant,
-    children,
-    fixed,
-    secondary,
-    brandText,
-    onOpen,
-    ...rest
-  } = props;
+  const { brandText, fixed, secondary } = props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue("gray.700", "gray.200");
@@ -35,7 +27,7 @@ export default function AdminNavbar(props) {
   let navbarBorder = "transparent";
   let secondaryMargin = "0px";
   let paddingX = "15px";
-  if (props.fixed === true)
+  if (fixed === true)
     if (scrolled === true) {
       navbarPosition = "fixed";
       navbarShadow = useColorModeValue(
@@ -52,7 +44,7 @@ export default function AdminNavbar(props) {
         "drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))"
       );
     }
-  if (props.secondary) {
+  if (secondary) {
     navbarBackdrop = "none";
     navbarPosition = "absolute";
     mainText = "white";
@@ -161,8 +153,8 @@ export default function AdminNavbar(props) {
 
 AdminNavbar.propTypes = {
   brandText: PropTypes.string,
-  variant: PropTypes.string,
   secondary: PropTypes.bool,
   fixed: PropTypes.bool,
   onOpen: PropTypes.func,
+  logoText: PropTypes.string,
 };

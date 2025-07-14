@@ -30,7 +30,7 @@ import { NavLink } from "react-router-dom";
 import routes from "routes.js";
 
 export default function HeaderLinks(props) {
-  const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+  const { secondary, onOpen, ...rest } = props;
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -67,24 +67,22 @@ export default function HeaderLinks(props) {
           borderColor: { mainTeal },
         }}
       >
-        <InputLeftElement
-          children={
-            <IconButton
-              bg="inherit"
-              borderRadius="inherit"
-              _hover="none"
-              _active={{
-                bg: "inherit",
-                transform: "none",
-                borderColor: "transparent",
-              }}
-              _focus={{
-                boxShadow: "none",
-              }}
-              icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}
-            ></IconButton>
-          }
-        />
+        <InputLeftElement>
+          <IconButton
+            bg="inherit"
+            borderRadius="inherit"
+            _hover="none"
+            _active={{
+              bg: "inherit",
+              transform: "none",
+              borderColor: "transparent",
+            }}
+            _focus={{
+              boxShadow: "none",
+            }}
+            icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}
+          ></IconButton>
+        </InputLeftElement>
         <Input
           fontSize="xs"
           py="11px"
@@ -120,7 +118,7 @@ export default function HeaderLinks(props) {
       </NavLink>
       <SidebarResponsive
         logoText={props.logoText}
-        secondary={props.secondary}
+        secondary={secondary}
         routes={routes}
         // logo={logo}
         {...rest}
@@ -130,7 +128,7 @@ export default function HeaderLinks(props) {
         ms={{ base: "16px", xl: "0px" }}
         me="16px"
         ref={settingsRef}
-        onClick={props.onOpen}
+        onClick={onOpen}
         color={navbarIcon}
         w="18px"
         h="18px"
@@ -180,4 +178,5 @@ HeaderLinks.propTypes = {
   fixed: PropTypes.bool,
   secondary: PropTypes.bool,
   onOpen: PropTypes.func,
+  logoText: PropTypes.string,
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import { Flex } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 export default function IconBox(props) {
   const { children, ...rest } = props;
@@ -15,3 +16,7 @@ export default function IconBox(props) {
     </Flex>
   );
 }
+
+IconBox.propTypes = {
+  children: PropTypes.node.isRequired,
+};

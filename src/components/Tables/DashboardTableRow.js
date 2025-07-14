@@ -10,6 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
+import PropTypes from "prop-types";
 
 function DashboardTableRow(props) {
   const { logo, name, members, budget, progression } = props;
@@ -32,11 +33,11 @@ function DashboardTableRow(props) {
 
       <Td>
         <AvatarGroup size="sm">
-          {members.map((member) => {
+          {members.map((member, index) => {
             return (
               <Avatar
                 name="Ryan Florence"
-                key={member}
+                key={index}
                 src={member}
                 _hover={{ zIndex: "3", cursor: "pointer" }}
               />
@@ -68,5 +69,13 @@ function DashboardTableRow(props) {
     </Tr>
   );
 }
+
+DashboardTableRow.propTypes = {
+  logo: PropTypes.elementType.isRequired,
+  name: PropTypes.string.isRequired,
+  members: PropTypes.arrayOf(PropTypes.string).isRequired,
+  budget: PropTypes.string.isRequired,
+  progression: PropTypes.number.isRequired,
+};
 
 export default DashboardTableRow;

@@ -1,8 +1,8 @@
 // chakra imports
 import { Avatar, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { ClockIcon } from "components/Icons/Icons";
-import PropTypes from "prop-types";
 import React from "react";
+import PropTypes from "prop-types";
 
 export function ItemContent(props) {
   const navbarIcon = useColorModeValue("gray.500", "gray.200");
@@ -34,3 +34,11 @@ export function ItemContent(props) {
     </>
   );
 }
+
+ItemContent.propTypes = {
+  aName: PropTypes.string.isRequired,
+  aSrc: PropTypes.string.isRequired,
+  boldInfo: PropTypes.string.isRequired,
+  info: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
+};

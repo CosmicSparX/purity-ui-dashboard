@@ -1,8 +1,9 @@
 import React from "react";
 import { Flex } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 export function Separator(props) {
-  const { variant, children, ...rest } = props;
+  const { children, ...rest } = props;
   return (
     <Flex
       h="1px"
@@ -14,3 +15,7 @@ export function Separator(props) {
     </Flex>
   );
 }
+
+Separator.propTypes = {
+  children: PropTypes.node,
+};

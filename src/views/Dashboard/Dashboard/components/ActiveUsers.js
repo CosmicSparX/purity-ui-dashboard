@@ -11,25 +11,27 @@ import {
   WalletIcon,
 } from "components/Icons/Icons.js";
 import React from "react";
+import PropTypes from "prop-types";
 import ChartStatistics from "./ChartStatistics";
 
 const ActiveUsers = ({ title, percentage, chart }) => {
   const iconBoxInside = useColorModeValue("white", "white");
   const textColor = useColorModeValue("gray.700", "white");
   return (
-    <Card p='16px'>
+    <Card p="16px">
       <CardBody>
-        <Flex direction='column' w='100%'>
+        <Flex direction="column" w="100%">
           {chart}
-          <Flex direction='column' mt='24px' mb='36px' alignSelf='flex-start'>
-            <Text fontSize='lg' color={textColor} fontWeight='bold' mb='6px'>
+          <Flex direction="column" mt="24px" mb="36px" alignSelf="flex-start">
+            <Text fontSize="lg" color={textColor} fontWeight="bold" mb="6px">
               {title}
             </Text>
-            <Text fontSize='md' fontWeight='medium' color='gray.400'>
+            <Text fontSize="md" fontWeight="medium" color="gray.400">
               <Text
-                as='span'
+                as="span"
                 color={percentage > 0 ? "green.400" : "red.400"}
-                fontWeight='bold'>
+                fontWeight="bold"
+              >
                 {percentage > 0 ? `+${percentage}%` : `-${percentage}%`}
               </Text>{" "}
               than last week
@@ -65,6 +67,12 @@ const ActiveUsers = ({ title, percentage, chart }) => {
       </CardBody>
     </Card>
   );
+};
+
+ActiveUsers.propTypes = {
+  title: PropTypes.string.isRequired,
+  percentage: PropTypes.number.isRequired,
+  chart: PropTypes.node.isRequired,
 };
 
 export default ActiveUsers;

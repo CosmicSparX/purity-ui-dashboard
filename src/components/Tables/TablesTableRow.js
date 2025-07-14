@@ -9,6 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
+import PropTypes from "prop-types";
 
 function TablesTableRow(props) {
   const { logo, name, email, subdomain, domain, status, date } = props;
@@ -78,5 +79,15 @@ function TablesTableRow(props) {
     </Tr>
   );
 }
+
+TablesTableRow.propTypes = {
+  logo: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  subdomain: PropTypes.string.isRequired,
+  domain: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+};
 
 export default TablesTableRow;
