@@ -110,9 +110,6 @@ importers:
       stylis:
         specifier: ^4.3.6
         version: 4.3.6
-      stylis-plugin-rtl:
-        specifier: ^2.1.1
-        version: 2.1.1(stylis@4.3.6)
     devDependencies:
       '@babel/plugin-transform-react-jsx-source':
         specifier: ^7.27.1
@@ -2911,10 +2908,6 @@ packages:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
     engines: {node: '>=4'}
     hasBin: true
-
-  cssjanus@2.3.0:
-    resolution: {integrity: sha512-ZZXXn51SnxRxAZ6fdY7mBDPmA4OZd83q/J9Gdqz3YmE9TUq+9tZl+tdOnCi7PpNygI6PEkehj9rgifv5+W8a5A==}
-    engines: {node: '>=10.0.0'}
 
   cssnano-preset-default@5.2.14:
     resolution: {integrity: sha512-t0SFesj/ZV2OTylqQVOrFgEh5uanxbO6ZAdeCrNsUQ6fVuXwYTxJPNAGvGTxHbD68ldIJNec7PyYZDBrfDQ+6A==}
@@ -6711,11 +6704,6 @@ packages:
     engines: {node: ^10 || ^12 || >=14.0}
     peerDependencies:
       postcss: ^8.2.15
-
-  stylis-plugin-rtl@2.1.1:
-    resolution: {integrity: sha512-q6xIkri6fBufIO/sV55md2CbgS5c6gg9EhSVATtHHCdOnbN/jcI0u3lYhNVeuI65c4lQPo67g8xmq5jrREvzlg==}
-    peerDependencies:
-      stylis: 4.x
 
   stylis@4.2.0:
     resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
@@ -10895,8 +10883,6 @@ snapshots:
   cssdb@7.11.2: {}
 
   cssesc@3.0.0: {}
-
-  cssjanus@2.3.0: {}
 
   cssnano-preset-default@5.2.14(postcss@8.5.6):
     dependencies:
@@ -15479,11 +15465,6 @@ snapshots:
       browserslist: 4.25.1
       postcss: 8.5.6
       postcss-selector-parser: 6.1.2
-
-  stylis-plugin-rtl@2.1.1(stylis@4.3.6):
-    dependencies:
-      cssjanus: 2.3.0
-      stylis: 4.3.6
 
   stylis@4.2.0: {}
 
