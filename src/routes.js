@@ -1,4 +1,3 @@
-// import
 import Dashboard from "views/Dashboard/Dashboard";
 import Tables from "views/Dashboard/Tables";
 import Billing from "views/Dashboard/Billing";
@@ -6,6 +5,9 @@ import RTLPage from "views/Dashboard/RTL";
 import Profile from "views/Dashboard/Profile";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
+import ManagerDashboard from "views/Dashboard/ManagerDashboard";
+import TesterDashboard from "views/Dashboard/TesterDashboard";
+import DeveloperDashboard from "views/Dashboard/DeveloperDashboard";
 
 import {
   HomeIcon,
@@ -49,6 +51,38 @@ var dashRoutes = [
     icon: <SupportIcon color="inherit" />,
     component: RTLPage,
     layout: "/rtl",
+  },
+  {
+    path: "/dashboard",
+    name: "Manager Dashboard",
+    rtlName: "لوحة القيادة",
+    icon: <HomeIcon color="inherit" />,
+    component: ManagerDashboard,
+    layout: "/manager",
+  },
+  {
+    path: "/dashboard",
+    name: "Tester Dashboard",
+    rtlName: "لوحة القيادة",
+    icon: <HomeIcon color="inherit" />,
+    component: TesterDashboard,
+    layout: "/tester",
+  },
+  {
+    path: "/dashboard",
+    name: "Developer Dashboard",
+    rtlName: "لوحة القيادة",
+    icon: <HomeIcon color="inherit" />,
+    component: DeveloperDashboard,
+    layout: "/developer",
+  },
+  {
+    path: "/dashboard",
+    name: "Default Dashboard",
+    rtlName: "لوحة القيادة",
+    icon: <HomeIcon color="inherit" />,
+    component: Dashboard, // You can create a generic default dashboard component if needed
+    layout: "/default",
   },
   {
     name: "ACCOUNT PAGES",

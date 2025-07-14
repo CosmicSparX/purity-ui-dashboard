@@ -1,8 +1,6 @@
-// Chakra imports
 import { ChakraProvider, Portal, useDisclosure } from "@chakra-ui/react";
 import Configurator from "components/Configurator/Configurator";
-import Footer from "components/Footer/Footer.js";
-// Layout components
+
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar";
 import React, { useState } from "react";
@@ -11,21 +9,22 @@ import routes from "routes.js";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-// Custom Chakra theme
 import theme from "theme/theme.js";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin";
-// Custom components
 import MainPanel from "../components/Layout/MainPanel";
 import PanelContainer from "../components/Layout/PanelContainer";
 import PanelContent from "../components/Layout/PanelContent";
-export default function Dashboard() {
-  // states and functions
+import PropTypes from "prop-types";
+
+export default function DashboardLayout(props) {
+  const { layoutPrefix } = props;
   const [sidebarVariant, setSidebarVariant] = useState("transparent");
   const [fixed, setFixed] = useState(false);
-  // functions for changing the states from components
+
   const getRoute = () => {
-    return window.location.pathname !== "/admin/full-screen-maps";
+    return window.location.pathname !== `${layoutPrefix}/full-screen-maps`;
   };
+
   const getActiveRoute = (routes) => {
     let activeRoute = "Default Brand Text";
     for (let i = 0; i < routes.length; i++) {
@@ -49,7 +48,7 @@ export default function Dashboard() {
     }
     return activeRoute;
   };
-  // This changes navbar state(fixed or not)
+
   const getActiveNavbar = (routes) => {
     let activeNavbar = false;
     for (let i = 0; i < routes.length; i++) {
@@ -70,6 +69,7 @@ export default function Dashboard() {
     }
     return activeNavbar;
   };
+
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
@@ -78,7 +78,7 @@ export default function Dashboard() {
       if (prop.category === "account") {
         return getRoutes(prop.views);
       }
-      if (prop.layout === "/admin") {
+      if (prop.layout === layoutPrefix) {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -91,13 +91,18 @@ export default function Dashboard() {
       }
     });
   };
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   document.documentElement.dir = "ltr";
-  // Chakra Color Mode
+
+  const filteredRoutes = routes.filter(
+    (route) => route.layout === layoutPrefix || route.category === "account"
+  );
+
   return (
     <ChakraProvider theme={theme} resetCss={false}>
       <Sidebar
-        routes={routes}
+        routes={filteredRoutes}
         logoText={"PURITY UI DASHBOARD"}
         display="none"
         sidebarVariant={sidebarVariant}
@@ -112,8 +117,8 @@ export default function Dashboard() {
           <AdminNavbar
             onOpen={onOpen}
             logoText={"PURITY UI DASHBOARD"}
-            brandText={getActiveRoute(routes)}
-            secondary={getActiveNavbar(routes)}
+            brandText={getActiveRoute(filteredRoutes)}
+            secondary={getActiveNavbar(filteredRoutes)}
             fixed={fixed}
           />
         </Portal>
@@ -122,21 +127,24 @@ export default function Dashboard() {
             <PanelContainer>
               <Switch>
                 {getRoutes(routes)}
-                <Redirect from="/admin" to="/admin/dashboard" />
+                <Redirect
+                  from={layoutPrefix}
+                  to={`${layoutPrefix}/dashboard`}
+                />
               </Switch>
             </PanelContainer>
           </PanelContent>
         ) : null}
-        <Footer />
+
         <Portal>
           <FixedPlugin
-            secondary={getActiveNavbar(routes)}
+            secondary={getActiveNavbar(filteredRoutes)}
             fixed={fixed}
             onOpen={onOpen}
           />
         </Portal>
         <Configurator
-          secondary={getActiveNavbar(routes)}
+          secondary={getActiveNavbar(filteredRoutes)}
           isOpen={isOpen}
           onClose={onClose}
           isChecked={fixed}
@@ -150,3 +158,7 @@ export default function Dashboard() {
     </ChakraProvider>
   );
 }
+
+DashboardLayout.propTypes = {
+  layoutPrefix: PropTypes.string.isRequired,
+};

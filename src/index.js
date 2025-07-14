@@ -20,14 +20,41 @@ import ReactDOM from "react-dom";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import AuthLayout from "layouts/Auth.js";
-import AdminLayout from "layouts/Admin.js";
+import DashboardLayout from "layouts/DashboardLayout.js";
 
 ReactDOM.render(
   <HashRouter>
     <Switch>
       <Route path={`/auth`} component={AuthLayout} />
-      <Route path={`/admin`} component={AdminLayout} />
-      <Redirect from={`/`} to="/admin/dashboard" />
+      <Route
+        path={`/admin`}
+        render={(props) => <DashboardLayout {...props} layoutPrefix="/admin" />}
+      />
+      <Route
+        path={`/manager`}
+        render={(props) => (
+          <DashboardLayout {...props} layoutPrefix="/manager" />
+        )}
+      />
+      <Route
+        path={`/tester`}
+        render={(props) => (
+          <DashboardLayout {...props} layoutPrefix="/tester" />
+        )}
+      />
+      <Route
+        path={`/developer`}
+        render={(props) => (
+          <DashboardLayout {...props} layoutPrefix="/developer" />
+        )}
+      />
+      <Route
+        path={`/default`}
+        render={(props) => (
+          <DashboardLayout {...props} layoutPrefix="/default" />
+        )}
+      />
+      <Redirect from={`/`} to="/auth/signin" />
     </Switch>
   </HashRouter>,
   document.getElementById("root")

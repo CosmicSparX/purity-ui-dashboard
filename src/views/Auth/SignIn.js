@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 // Chakra imports
 import {
   Box,
@@ -8,7 +9,6 @@ import {
   FormLabel,
   Heading,
   Input,
-  Link,
   Switch,
   Text,
   useColorModeValue,
@@ -17,6 +17,96 @@ import {
 import signInImage from "assets/img/signInImage.png";
 
 function SignIn() {
+  const history = useHistory();
+  const [identifier, setIdentifier] = useState(""); // Can be email or username
+  const [password, setPassword] = useState("");
+
+  // More robust email validation regex
+  const emailRegex = /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/;
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    // --- Dummy Credentials for UI Testing ---
+    if (identifier === "admin@example.com" && password === "password") {
+      console.log("Dummy Admin Login");
+      history.push("/admin/dashboard");
+      return;
+    }
+    if (identifier === "manager@example.com" && password === "password") {
+      console.log("Dummy Manager Login");
+      history.push("/manager/dashboard");
+      return;
+    }
+    if (identifier === "tester@example.com" && password === "password") {
+      console.log("Dummy Tester Login");
+      history.push("/tester/dashboard");
+      return;
+    }
+    if (identifier === "developer@example.com" && password === "password") {
+      console.log("Dummy Developer Login");
+      history.push("/developer/dashboard");
+      return;
+    }
+    // --- End Dummy Credentials ---
+
+    const isEmail = emailRegex.test(identifier); // Use the improved regex
+    let loginEndpoint = "";
+    let requestBody = {};
+
+    if (isEmail) {
+      loginEndpoint = "YOUR_LOGIN_WITH_EMAIL_API_ENDPOINT"; // Replace with your actual email login endpoint
+      requestBody = { email: identifier, password };
+    } else {
+      loginEndpoint = "YOUR_LOGIN_WITH_USERNAME_API_ENDPOINT"; // Replace with your actual username login endpoint
+      requestBody = { username: identifier, password };
+    }
+
+    try {
+      const response = await fetch(loginEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const userRole = data.role; // Assuming your API returns a 'role' field
+
+        // Store user data or token (e.g., in localStorage or context)
+        // localStorage.setItem("token", data.token);
+        // localStorage.setItem("userRole", userRole);
+
+        // Redirect based on role
+        switch (userRole) {
+          case "Admin":
+            history.push("/admin/dashboard");
+            break;
+          case "Manager":
+            history.push("/manager/dashboard");
+            break;
+          case "Tester":
+            history.push("/tester/dashboard");
+            break;
+          case "Developer":
+            history.push("/developer/dashboard");
+            break;
+          default:
+            history.push("/default/dashboard"); // Fallback for unknown roles
+        }
+      } else {
+        console.error("Login failed:", data.message || "Unknown error");
+        alert(data.message || "Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      console.error("Network error or API call failed:", error);
+      alert("An error occurred during login. Please try again.");
+    }
+  };
+
   // Chakra color mode
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.400", "white");
@@ -54,19 +144,21 @@ function SignIn() {
               fontWeight="bold"
               fontSize="14px"
             >
-              Enter your email and password to sign in
+              Enter your email or username and password to sign in
             </Text>
-            <FormControl>
+            <FormControl as="form" onSubmit={handleLogin}>
               <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-                Email
+                Email or Username
               </FormLabel>
               <Input
                 borderRadius="15px"
                 mb="24px"
                 fontSize="sm"
                 type="text"
-                placeholder="Your email adress"
+                placeholder="Your email or username"
                 size="lg"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
               />
               <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
                 Password
@@ -78,6 +170,8 @@ function SignIn() {
                 type="password"
                 placeholder="Your password"
                 size="lg"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <FormControl display="flex" alignItems="center">
                 <Switch id="remember-login" colorScheme="teal" me="10px" />
@@ -109,20 +203,6 @@ function SignIn() {
                 SIGN IN
               </Button>
             </FormControl>
-            <Flex
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-              maxW="100%"
-              mt="0px"
-            >
-              <Text color={textColor} fontWeight="medium">
-                Don&apos;t have an account?
-                <Link color={titleColor} as="span" ms="5px" fontWeight="bold">
-                  Sign Up
-                </Link>
-              </Text>
-            </Flex>
           </Flex>
         </Flex>
         <Box
