@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useAuth } from "contexts/AuthContext";
 // Chakra imports
 import {
   Flex,
@@ -15,6 +16,7 @@ import {
 
 function SignIn() {
   const history = useHistory();
+  const { login } = useAuth();
   const [identifier, setIdentifier] = useState(""); // Can be email or username
   const [password, setPassword] = useState("");
 
@@ -52,11 +54,11 @@ function SignIn() {
     let requestBody = {};
 
     if (isEmail) {
-      loginEndpoint = "YOUR_LOGIN_WITH_EMAIL_API_ENDPOINT"; // Replace with your actual email login endpoint
-      requestBody = { email: identifier, password };
+      loginEndpoint = "http://localhost:5000/auth/login"; // Replace with your actual email login endpoint
+      requestBody = { email: identifier, password: password };
     } else {
-      loginEndpoint = "YOUR_LOGIN_WITH_USERNAME_API_ENDPOINT"; // Replace with your actual username login endpoint
-      requestBody = { username: identifier, password };
+      loginEndpoint = "http://localhost:5000/auth/login"; // Replace with your actual username login endpoint
+      requestBody = { username: identifier, password: password };
     }
 
     try {
@@ -71,11 +73,7 @@ function SignIn() {
       const data = await response.json();
 
       if (response.ok) {
-        const userRole = data.role; // Assuming your API returns a 'role' field
-
-        // Store user data or token (e.g., in localStorage or context)
-        // localStorage.setItem("token", data.token);
-        // localStorage.setItem("userRole", userRole);
+        const userRole = login(data.access_token); // Use the login function from AuthContext
 
         // Redirect based on role
         switch (userRole) {

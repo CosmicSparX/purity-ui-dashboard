@@ -22,40 +22,46 @@ import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import AuthLayout from "layouts/Auth.js";
 import DashboardLayout from "layouts/DashboardLayout.js";
 
+import { AuthProvider } from "./contexts/AuthContext";
+
 ReactDOM.render(
   <HashRouter>
-    <Switch>
-      <Route path={`/auth`} component={AuthLayout} />
-      <Route
-        path={`/admin`}
-        render={(props) => <DashboardLayout {...props} layoutPrefix="/admin" />}
-      />
-      <Route
-        path={`/manager`}
-        render={(props) => (
-          <DashboardLayout {...props} layoutPrefix="/manager" />
-        )}
-      />
-      <Route
-        path={`/tester`}
-        render={(props) => (
-          <DashboardLayout {...props} layoutPrefix="/tester" />
-        )}
-      />
-      <Route
-        path={`/developer`}
-        render={(props) => (
-          <DashboardLayout {...props} layoutPrefix="/developer" />
-        )}
-      />
-      <Route
-        path={`/default`}
-        render={(props) => (
-          <DashboardLayout {...props} layoutPrefix="/default" />
-        )}
-      />
-      <Redirect from={`/`} to="/auth/signin" />
-    </Switch>
+    <AuthProvider>
+      <Switch>
+        <Route path={`/auth`} component={AuthLayout} />
+        <Route
+          path={`/admin`}
+          render={(props) => (
+            <DashboardLayout {...props} layoutPrefix="/admin" />
+          )}
+        />
+        <Route
+          path={`/manager`}
+          render={(props) => (
+            <DashboardLayout {...props} layoutPrefix="/manager" />
+          )}
+        />
+        <Route
+          path={`/tester`}
+          render={(props) => (
+            <DashboardLayout {...props} layoutPrefix="/tester" />
+          )}
+        />
+        <Route
+          path={`/developer`}
+          render={(props) => (
+            <DashboardLayout {...props} layoutPrefix="/developer" />
+          )}
+        />
+        <Route
+          path={`/default`}
+          render={(props) => (
+            <DashboardLayout {...props} layoutPrefix="/default" />
+          )}
+        />
+        <Redirect from={`/`} to="/auth/signin" />
+      </Switch>
+    </AuthProvider>
   </HashRouter>,
   document.getElementById("root")
 );

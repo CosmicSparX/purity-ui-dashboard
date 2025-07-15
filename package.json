@@ -2,7 +2,6 @@
 	"name": "purity-dashboard-react",
 	"version": "2.0.2",
 	"private": true,
-	
 	"dependencies": {
 		"@chakra-ui/icons": "^1.1.7",
 		"@chakra-ui/react": "1.8.8",
@@ -19,6 +18,7 @@
 		"classnames": "2.3.1",
 		"cross-env": "^7.0.3",
 		"framer-motion": "^4.1.17",
+		"jwt-decode": "^4.0.0",
 		"match-sorter": "6.3.0",
 		"moment": "2.29.1",
 		"nouislider": "15.0.0",

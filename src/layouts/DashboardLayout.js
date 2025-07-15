@@ -3,8 +3,9 @@ import Configurator from "components/Configurator/Configurator";
 
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar";
-import React, { useState } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import routes from "routes.js";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -20,6 +21,24 @@ export default function DashboardLayout(props) {
   const { layoutPrefix } = props;
   const [sidebarVariant, setSidebarVariant] = useState("transparent");
   const [fixed, setFixed] = useState(false);
+  const { accessToken, userRole } = useAuth();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!accessToken) {
+      history.push("/auth/signin");
+    } else if (userRole && layoutPrefix !== `/${userRole.toLowerCase()}`) {
+      // Redirect to the correct dashboard based on role
+      history.push(`/${userRole.toLowerCase()}/dashboard`);
+    }
+  }, [accessToken, userRole, layoutPrefix, history]);
+
+  if (
+    !accessToken ||
+    (userRole && layoutPrefix !== `/${userRole.toLowerCase()}`)
+  ) {
+    return null; // Or a loading spinner, to prevent flickering
+  }
 
   const getRoute = () => {
     return window.location.pathname !== `${layoutPrefix}/full-screen-maps`;

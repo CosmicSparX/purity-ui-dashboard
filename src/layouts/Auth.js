@@ -3,8 +3,9 @@ import { Box, ChakraProvider } from "@chakra-ui/react";
 
 // core components
 
-import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import routes from "routes.js";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -12,9 +13,15 @@ import "@fontsource/roboto/700.css";
 import theme from "theme/theme.js";
 
 export default function Pages() {
-  React.useEffect(() => {
+  const { accessToken, userRole } = useAuth();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (accessToken && userRole) {
+      history.push(`/${userRole.toLowerCase()}/dashboard`);
+    }
     document.body.style.overflow = "unset";
-  });
+  }, [accessToken, userRole, history]);
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
