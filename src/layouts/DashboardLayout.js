@@ -1,11 +1,9 @@
 import { ChakraProvider, Portal, useDisclosure } from "@chakra-ui/react";
 import Configurator from "components/Configurator/Configurator";
-
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar";
-import React, { useState, useEffect } from "react";
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import React, { useState, useMemo } from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
 import routes from "routes.js";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -19,110 +17,67 @@ import PropTypes from "prop-types";
 
 export default function DashboardLayout(props) {
   const { layoutPrefix } = props;
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [sidebarVariant, setSidebarVariant] = useState("transparent");
   const [fixed, setFixed] = useState(false);
-  const { accessToken, userRole } = useAuth();
-  const history = useHistory();
 
-  useEffect(() => {
-    if (!accessToken) {
-      history.push("/auth/signin");
-    } else if (userRole && layoutPrefix !== `/${userRole.toLowerCase()}`) {
-      // Redirect to the correct dashboard based on role
-      history.push(`/${userRole.toLowerCase()}/dashboard`);
-    }
-  }, [accessToken, userRole, layoutPrefix, history]);
+  // Create a single, definitive list of routes for the current user.
+  // This is used for both the router and the sidebar to ensure consistency.
+  const userRoutes = useMemo(() => {
+    const roleSpecificRoutes = routes.filter(
+      (route) => route.layout === layoutPrefix
+    );
 
-  if (
-    !accessToken ||
-    (userRole && layoutPrefix !== `/${userRole.toLowerCase()}`)
-  ) {
-    return null; // Or a loading spinner, to prevent flickering
-  }
+    const accountPages = routes.find((route) => route.category === "account");
+    const sharedRoutes = (accountPages?.views || [])
+      .filter((route) => route.path !== "/signin")
+      .map((route) => {
+        return {
+          ...route,
+          // Dynamically create the full path for shared routes
+          path: route.path,
+          // Also update the layout property for consistency in other components
+          layout: layoutPrefix,
+        };
+      });
+
+    // The sidebar needs the ACCOUNT PAGES category wrapper.
+    const sidebarAccountCategory = {
+      ...accountPages,
+      views: sharedRoutes,
+    };
+
+    return [...roleSpecificRoutes, sidebarAccountCategory];
+  }, [layoutPrefix]);
 
   const getRoute = () => {
     return window.location.pathname !== `${layoutPrefix}/full-screen-maps`;
   };
 
-  const getActiveRoute = (routes) => {
-    let activeRoute = "Default Brand Text";
-    for (let i = 0; i < routes.length; i++) {
-      if (routes[i].collapse) {
-        let collapseActiveRoute = getActiveRoute(routes[i].views);
-        if (collapseActiveRoute !== activeRoute) {
-          return collapseActiveRoute;
-        }
-      } else if (routes[i].category) {
-        let categoryActiveRoute = getActiveRoute(routes[i].views);
-        if (categoryActiveRoute !== activeRoute) {
-          return categoryActiveRoute;
-        }
-      } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
-          return routes[i].name;
-        }
+  const getActiveRoute = () => {
+    const currentPath = window.location.href;
+    // Search role-specific routes
+    for (const route of userRoutes) {
+      if (route.path && currentPath.indexOf(route.layout + route.path) !== -1) {
+        return route.name;
       }
-    }
-    return activeRoute;
-  };
-
-  const getActiveNavbar = (routes) => {
-    let activeNavbar = false;
-    for (let i = 0; i < routes.length; i++) {
-      if (routes[i].category) {
-        let categoryActiveNavbar = getActiveNavbar(routes[i].views);
-        if (categoryActiveNavbar !== activeNavbar) {
-          return categoryActiveNavbar;
-        }
-      } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
-          if (routes[i].secondaryNavbar) {
-            return routes[i].secondaryNavbar;
+      // Search shared routes within categories
+      if (route.category === "account") {
+        for (const view of route.views) {
+          if (currentPath.indexOf(view.path) !== -1) {
+            return view.name;
           }
         }
       }
     }
-    return activeNavbar;
+    return "Default Brand Text";
   };
-
-  const getRoutes = (routes) => {
-    return routes.map((prop, key) => {
-      if (prop.collapse) {
-        return getRoutes(prop.views);
-      }
-      if (prop.category === "account") {
-        return getRoutes(prop.views);
-      }
-      if (prop.layout === layoutPrefix) {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
-      } else {
-        return null;
-      }
-    });
-  };
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  document.documentElement.dir = "ltr";
-
-  const filteredRoutes = routes.filter(
-    (route) => route.layout === layoutPrefix || route.category === "account"
-  );
 
   return (
     <ChakraProvider theme={theme} resetCss={false}>
       <Sidebar
-        routes={filteredRoutes}
-        logoText={"PURITY UI DASHBOARD"}
+        routes={userRoutes}
+        logoText={null}
         display="none"
         sidebarVariant={sidebarVariant}
       />
@@ -135,9 +90,9 @@ export default function DashboardLayout(props) {
         <Portal>
           <AdminNavbar
             onOpen={onOpen}
-            logoText={"PURITY UI DASHBOARD"}
-            brandText={getActiveRoute(filteredRoutes)}
-            secondary={getActiveNavbar(filteredRoutes)}
+            logoText={null}
+            brandText={getActiveRoute()}
+            secondary={false} // This was being calculated in a complex way, simplifying for now
             fixed={fixed}
           />
         </Portal>
@@ -145,8 +100,32 @@ export default function DashboardLayout(props) {
           <PanelContent>
             <PanelContainer>
               <Switch>
-                {getRoutes(routes)}
+                {
+                  // Render routes for the user's role
+                  userRoutes.map((prop, key) => {
+                    if (prop.category === "account") {
+                      // If it's the account category, map through its views
+                      return prop.views.map((view, viewKey) => (
+                        <Route
+                          path={layoutPrefix + view.path}
+                          component={view.component}
+                          key={viewKey}
+                        />
+                      ));
+                    } else {
+                      // Otherwise, it's a direct route
+                      return (
+                        <Route
+                          path={prop.layout + prop.path}
+                          component={prop.component}
+                          key={key}
+                        />
+                      );
+                    }
+                  })
+                }
                 <Redirect
+                  exact
                   from={layoutPrefix}
                   to={`${layoutPrefix}/dashboard`}
                 />
@@ -154,16 +133,11 @@ export default function DashboardLayout(props) {
             </PanelContainer>
           </PanelContent>
         ) : null}
-
         <Portal>
-          <FixedPlugin
-            secondary={getActiveNavbar(filteredRoutes)}
-            fixed={fixed}
-            onOpen={onOpen}
-          />
+          <FixedPlugin secondary={false} fixed={fixed} onOpen={onOpen} />
         </Portal>
         <Configurator
-          secondary={getActiveNavbar(filteredRoutes)}
+          secondary={false}
           isOpen={isOpen}
           onClose={onClose}
           isChecked={fixed}

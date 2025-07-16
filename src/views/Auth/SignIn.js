@@ -12,39 +12,46 @@ import {
   Switch,
   Text,
   useColorModeValue,
+  Spinner, // Import Spinner
 } from "@chakra-ui/react";
 
 function SignIn() {
   const history = useHistory();
-  const { login } = useAuth();
+  const { login } = useAuth(); // Get login function, not loading state
   const [identifier, setIdentifier] = useState(""); // Can be email or username
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Local loading state for the button
 
   // More robust email validation regex
   const emailRegex = /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/;
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Set local loading to true
 
     // --- Dummy Credentials for UI Testing ---
     if (identifier === "admin@example.com" && password === "password") {
       console.log("Dummy Admin Login");
       history.push("/admin/dashboard");
+      setIsLoading(false); // Set local loading to false
       return;
     }
     if (identifier === "manager@example.com" && password === "password") {
       console.log("Dummy Manager Login");
       history.push("/manager/dashboard");
+      setIsLoading(false); // Set local loading to false
       return;
     }
     if (identifier === "tester@example.com" && password === "password") {
       console.log("Dummy Tester Login");
       history.push("/tester/dashboard");
+      setIsLoading(false); // Set local loading to false
       return;
     }
     if (identifier === "developer@example.com" && password === "password") {
       console.log("Dummy Developer Login");
       history.push("/developer/dashboard");
+      setIsLoading(false); // Set local loading to false
       return;
     }
     // --- End Dummy Credentials ---
@@ -54,10 +61,9 @@ function SignIn() {
     let requestBody = {};
 
     if (isEmail) {
-      loginEndpoint = "http://localhost:5000/auth/login"; // Replace with your actual email login endpoint
-      requestBody = { email: identifier, password: password };
+      loginEndpoint = "/api/auth/login";
     } else {
-      loginEndpoint = "http://localhost:5000/auth/login"; // Replace with your actual username login endpoint
+      loginEndpoint = "/api/auth/login";
       requestBody = { username: identifier, password: password };
     }
 
@@ -99,6 +105,8 @@ function SignIn() {
     } catch (error) {
       console.error("Network error or API call failed:", error);
       alert("An error occurred during login. Please try again.");
+    } finally {
+      setIsLoading(false); // Set local loading to false in finally block
     }
   };
 
@@ -184,6 +192,8 @@ function SignIn() {
             _active={{
               bg: "teal.400",
             }}
+            isLoading={isLoading} // Use local isLoading state
+            spinner={<Spinner size="sm" color="white" />} // Add custom spinner
           >
             SIGN IN
           </Button>

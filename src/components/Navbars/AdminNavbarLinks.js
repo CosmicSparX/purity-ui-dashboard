@@ -1,5 +1,8 @@
 // Chakra Icons
-import { BellIcon, SearchIcon } from "@chakra-ui/icons";
+import React from "react";
+import { NavLink, useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
+
 // Chakra Imports
 import {
   Button,
@@ -15,22 +18,36 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
+// Chakra Icons
+import { BellIcon, SearchIcon } from "@chakra-ui/icons";
+
+// Custom Icons
+import {
+  ProfileIcon,
+  SettingsIcon,
+  HomeIcon,
+  DocumentIcon,
+} from "components/Icons/Icons";
+
+// Custom Components
+import { ItemContent } from "components/Menu/ItemContent";
+import SidebarResponsive from "components/Sidebar/SidebarResponsive";
+
+// Context
+import { useAuth } from "contexts/AuthContext";
+
 // Assets
 import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar2.png";
 import avatar3 from "assets/img/avatars/avatar3.png";
-// Custom Icons
-import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
-// Custom Components
-import { ItemContent } from "components/Menu/ItemContent";
-import SidebarResponsive from "components/Sidebar/SidebarResponsive";
-import PropTypes from "prop-types";
-import React from "react";
-import { NavLink } from "react-router-dom";
+
 import routes from "routes.js";
 
 export default function HeaderLinks(props) {
   const { secondary, onOpen, ...rest } = props;
+  const { accessToken, logout, userRole } = useAuth();
+  const history = useHistory();
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -44,6 +61,19 @@ export default function HeaderLinks(props) {
     mainText = "white";
   }
   const settingsRef = React.useRef();
+
+  const handleProfileClick = () => {
+    history.push("/admin/profile");
+  };
+
+  const handleDashboardClick = () => {
+    history.push(`/${userRole.toLowerCase()}/dashboard`);
+  };
+
+  const handleLogoutClick = () => {
+    logout();
+  };
+
   return (
     <Flex
       pe={{ sm: "0px", md: "16px" }}
@@ -91,31 +121,62 @@ export default function HeaderLinks(props) {
           borderRadius="inherit"
         />
       </InputGroup>
-      <NavLink to="/auth/signin">
-        <Button
-          ms="0px"
-          px="0px"
-          me={{ sm: "2px", md: "16px" }}
-          color={navbarIcon}
-          variant="transparent-with-icon"
-          rightIcon={
-            document.documentElement.dir ? (
-              ""
-            ) : (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            )
-          }
-          leftIcon={
-            document.documentElement.dir ? (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            ) : (
-              ""
-            )
-          }
-        >
-          <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
-        </Button>
-      </NavLink>
+      {accessToken ? (
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            icon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
+            variant="transparent-with-icon"
+            ms="0px"
+            px="0px"
+            me={{ sm: "2px", md: "16px" }}
+            color={navbarIcon}
+            _hover={{ bg: "transparent" }}
+            _active={{ bg: "transparent" }}
+            _focus={{ boxShadow: "none" }}
+          />
+          <MenuList p="16px 8px">
+            <MenuItem borderRadius="8px" onClick={handleDashboardClick}>
+              <HomeIcon color={navbarIcon} w="18px" h="18px" me="8px" />
+              <Text>Dashboard</Text>
+            </MenuItem>
+            <MenuItem borderRadius="8px" onClick={handleProfileClick}>
+              <ProfileIcon color={navbarIcon} w="18px" h="18px" me="8px" />
+              <Text>Profile</Text>
+            </MenuItem>
+            <MenuItem borderRadius="8px" onClick={handleLogoutClick}>
+              <DocumentIcon color={navbarIcon} w="18px" h="18px" me="8px" />
+              <Text>Logout</Text>
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      ) : (
+        <NavLink to="/auth/signin">
+          <Button
+            ms="0px"
+            px="0px"
+            me={{ sm: "2px", md: "16px" }}
+            color={navbarIcon}
+            variant="transparent-with-icon"
+            rightIcon={
+              document.documentElement.dir ? (
+                ""
+              ) : (
+                <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+              )
+            }
+            leftIcon={
+              document.documentElement.dir ? (
+                <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+              ) : (
+                ""
+              )
+            }
+          >
+            <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
+          </Button>
+        </NavLink>
+      )}
       <SidebarResponsive
         logoText={props.logoText}
         secondary={secondary}

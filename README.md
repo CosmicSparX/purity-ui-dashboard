@@ -173,8 +173,7 @@ purity-ui-dashboard/
     │       └── TransactionRow.js
     ├── layouts
     │   ├── Admin.js
-    │   ├── Auth.js
-    │   └── RTL.js
+    │   └── Auth.js
     ├── theme
     │   ├── additions
     │   │   ├── card
@@ -203,11 +202,9 @@ purity-ui-dashboard/
     │   │   ├── Dashboard.js
     │   │   ├── Profile.js
     │   │   └── Tables.js
-    │   ├── Pages
+    │   └── Pages
     │       ├── SignIn.js
     │       └── SignUp.js
-    │   └── RTL
-    │       └── RTLPage.js
     ├── index.js
     └── routes.js
 
@@ -237,9 +234,9 @@ We use GitHub Issues as the official bug tracker for the Purity UI Dashboard. He
 
 ## Licensing
 
-- Copyright 2021 Creative Tim (https://www.creative-tim.com/?ref=readme-pud)
+- Copyright 2021 Creative Tim (<https://www.creative-tim.com/?ref=readme-pud>)
 
-- Creative Tim License (https://www.creative-tim.com/license)
+- Creative Tim License (<https://www.creative-tim.com/license>)
 
 ## Useful Links
 
