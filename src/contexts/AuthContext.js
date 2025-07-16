@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   const isRefreshing = useRef(false);
+  const isLoggingOut = useRef(false);
   const refreshPromise = useRef(null);
 
   const decodeToken = useCallback((token) => {
@@ -49,6 +50,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = useCallback(async () => {
+    isLoggingOut.current = true;
     setLoading(true);
     try {
       await fetch(`/api/auth/logout`, {
@@ -68,6 +70,7 @@ export const AuthProvider = ({ children }) => {
       setUserID(null);
       history.push("/auth/signin");
       setLoading(false);
+      isLoggingOut.current = false;
     }
   }, [accessToken, history]);
 
@@ -116,6 +119,9 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (refreshResponse.ok) {
+          if (isLoggingOut.current) {
+            return null;
+          }
           const data = await refreshResponse.json();
           setAccessToken(data.access_token);
           const { role, id } = decodeToken(data.access_token);
@@ -139,7 +145,7 @@ export const AuthProvider = ({ children }) => {
     })();
 
     return refreshPromise.current;
-  }, [accessToken, userID, logout, decodeToken]);
+  }, [userID, logout, decodeToken]);
 
   return (
     <AuthContext.Provider
