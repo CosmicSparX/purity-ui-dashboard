@@ -11,12 +11,12 @@ import {
   Td,
   Text,
   useDisclosure,
-  Spinner,
-  Alert,
+  Spinner, // Added Spinner for loading state
+  Alert, // Added Alert for error messages
   AlertIcon,
 } from "@chakra-ui/react";
 import UserFormModal from "./components/UserFormModal";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext"; // Import useAuth
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -27,19 +27,20 @@ function UserManagement() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { verifyAndRefreshTokens } = useAuth();
+  const { verifyAndRefreshTokens } = useAuth(); // Get verifyAndRefreshTokens from useAuth
 
+  // Custom fetch wrapper for authenticated requests
   const protectedFetch = useCallback(
     async (url, options = {}) => {
       const currentToken = await verifyAndRefreshTokens();
       if (!currentToken) {
-        setError("Authentication failed. Please log in again.");
-        return null;
+        // If token refresh failed or no refresh token, user is logged out by verifyAndRefreshTokens
+        return;
       }
 
       const headers = {
         ...options.headers,
-        Authorization: `Bearer ${currentToken}`,
+        Authorization: `Bearer ${currentToken}`, // Use the potentially new accessToken
       };
 
       const response = await fetch(url, { ...options, headers });
@@ -53,7 +54,6 @@ function UserManagement() {
     setError(null);
     try {
       const response = await protectedFetch(`${API_BASE_URL}/`);
-      if (response === null) return;
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -64,11 +64,11 @@ function UserManagement() {
     } finally {
       setLoading(false);
     }
-  }, [protectedFetch]);
+  }, [protectedFetch, API_BASE_URL]);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, []); // Fetch users on component mount
 
   const handleEdit = (userId) => {
     const userToEdit = users.find((user) => user.ID === userId);
@@ -82,7 +82,6 @@ function UserManagement() {
         const response = await protectedFetch(`${API_BASE_URL}/${userId}`, {
           method: "DELETE",
         });
-        if (response === null) return;
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -104,7 +103,7 @@ function UserManagement() {
       const payload = {
         username: formData.username,
         email: formData.email,
-        roles: [{ role_name: formData.role }],
+        role_name: formData.role,
       };
 
       if (formData.password) {
@@ -112,6 +111,8 @@ function UserManagement() {
       }
 
       if (formData.ID) {
+        // Use formData.ID
+        // Update existing user
         response = await protectedFetch(`${API_BASE_URL}/${formData.ID}`, {
           method: "PATCH",
           headers: {
@@ -120,6 +121,7 @@ function UserManagement() {
           body: JSON.stringify(payload),
         });
       } else {
+        // Add new user
         response = await protectedFetch(`${API_BASE_URL}/create`, {
           method: "POST",
           headers: {
@@ -128,8 +130,6 @@ function UserManagement() {
           body: JSON.stringify(payload),
         });
       }
-
-      if (response === null) return;
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
