@@ -2,7 +2,7 @@ import Dashboard from "views/Dashboard/Dashboard";
 import Profile from "views/Dashboard/Profile";
 import SignIn from "views/Auth/SignIn.js";
 import UserManagement from "views/Dashboard/UserManagement";
-import ManagerDashboard from "views/Dashboard/ManagerDashboard";
+import ManagerDashboardPage from "views/Dashboard/ManagerDashboard/ManagerDashboardPage";
 import TesterDashboard from "views/Dashboard/TesterDashboard";
 import DeveloperDashboard from "views/Dashboard/DeveloperDashboard";
 
@@ -27,7 +27,7 @@ var dashRoutes = [
     path: "/dashboard",
     name: "Manager Dashboard",
     icon: <HomeIcon color="inherit" />,
-    component: ManagerDashboard,
+    component: ManagerDashboardPage,
     layout: "/manager",
   },
   {
