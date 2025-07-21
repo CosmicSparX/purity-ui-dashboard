@@ -1,12 +1,19 @@
 import React from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Flex, Avatar, useColorModeValue } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 function Comment({ comment }) {
+  const bg = useColorModeValue("gray.100", "gray.700");
+
   return (
-    <Box borderBottomWidth="1px" p="4">
-      <Text fontWeight="bold">{comment.author}</Text>
-      <Text>{comment.text}</Text>
+    <Box bg={bg} p="4" borderRadius="md">
+      <Flex align="center">
+        <Avatar size="sm" name={comment.author} mr="3" />
+        <Box>
+          <Text fontWeight="bold">{comment.author}</Text>
+          <Text>{comment.text}</Text>
+        </Box>
+      </Flex>
     </Box>
   );
 }

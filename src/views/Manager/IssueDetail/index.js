@@ -4,21 +4,16 @@ import {
   Flex,
   Heading,
   Text,
-  Textarea,
-  Button,
-  VStack,
+  SimpleGrid,
+  Grid,
   useColorModeValue,
   Box,
   Stat,
   StatLabel,
   StatNumber,
-  SimpleGrid,
-  Grid,
 } from "@chakra-ui/react";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import CardHeader from "components/Card/CardHeader.js";
-import Comment from "./components/Comment";
+import IssueInfo from "./components/IssueInfo";
+import Comments from "./components/Comments";
 
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 
@@ -97,17 +92,15 @@ function IssueDetail() {
   };
 
   return (
-    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+    <Flex direction="column" pt={{ base: "120px", md: "75px" }} gap="22px">
       <Box
-        mb={{ sm: "20px", md: "50px", lg: "20px" }}
         borderRadius="15px"
         px="30px"
         mx={{ base: "auto", lg: "0px" }}
-        pt={{ base: "100px", md: "100px" }}
         bgImage={ProfileBgImage}
         bgSize="cover"
         maxW="100%"
-        w={{ sm: "100%", md: "100%" }}
+        w="100%"
         h={{ sm: "200px", md: "200px" }}
         position="relative"
       >
@@ -163,44 +156,14 @@ function IssueDetail() {
         </Flex>
       </Box>
 
-      <Grid templateColumns={{ sm: "1fr" }} gap="22px" mt="80px">
-        <Card>
-          <CardHeader>
-            <Heading as="h3" size="md">
-              Issue Information
-            </Heading>
-          </CardHeader>
-          <CardBody>
-            <Text fontSize="md" color={textColor}>
-              <strong>Assigned To:</strong> {issue.assignedTo}
-            </Text>
-            <Text mt="4" fontSize="md" color={textColor}>
-              {issue.description}
-            </Text>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <Heading as="h3" size="md">
-              Comments
-            </Heading>
-          </CardHeader>
-          <CardBody>
-            <VStack spacing={4} align="stretch">
-              {issue.comments.map((comment) => (
-                <Comment key={comment.id} comment={comment} />
-              ))}
-              <Textarea
-                value={newComment}
-                onChange={handleCommentChange}
-                placeholder="Add a comment..."
-                mb="10px"
-              />
-              <Button onClick={handleCommentSubmit}>Submit</Button>
-            </VStack>
-          </CardBody>
-        </Card>
+      <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="22px" mt="80px">
+        <IssueInfo issue={issue} />
+        <Comments
+          comments={issue.comments}
+          newComment={newComment}
+          onCommentChange={handleCommentChange}
+          onCommentSubmit={handleCommentSubmit}
+        />
       </Grid>
     </Flex>
   );
