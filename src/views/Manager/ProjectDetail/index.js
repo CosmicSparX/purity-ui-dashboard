@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -72,12 +72,17 @@ import ProfileBgImage from "assets/img/ProfileBackground.png";
 
 function ProjectDetail() {
   let { projectId } = useParams();
+  const history = useHistory();
   const project = projectsData[projectId];
   const textColor = useColorModeValue("gray.700", "white");
 
   if (!project) {
     return <div>Project not found</div>;
   }
+
+  const handleGoBack = () => {
+    history.goBack();
+  };
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
@@ -87,6 +92,7 @@ function ProjectDetail() {
         totalIssues={project.totalIssues}
         openIssues={project.openIssues}
         closedIssues={project.closedIssues}
+        handleGoBack={handleGoBack}
       />
       <Grid templateColumns={{ sm: "1fr", xl: "1fr 2fr" }} gap="22px" mt="20px">
         <Card>

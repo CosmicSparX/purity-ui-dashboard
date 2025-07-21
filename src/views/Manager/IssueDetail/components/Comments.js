@@ -15,7 +15,7 @@ function Comments({ comments, newComment, onCommentChange, onCommentSubmit }) {
           Comments
         </Heading>
       </CardHeader>
-      <CardBody>
+      <CardBody pt="20px">
         <VStack spacing={4} align="stretch">
           {comments.map((comment) => (
             <Comment key={comment.id} comment={comment} />

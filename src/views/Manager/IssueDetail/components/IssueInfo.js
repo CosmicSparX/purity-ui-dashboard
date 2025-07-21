@@ -16,7 +16,7 @@ function IssueInfo({ description }) {
           Description
         </Text>
       </CardHeader>
-      <CardBody>
+      <CardBody pt="20px">
         <Text fontSize="md" color={textColor}>
           {description}
         </Text>

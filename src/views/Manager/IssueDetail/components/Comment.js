@@ -6,7 +6,7 @@ function Comment({ comment }) {
   const bg = useColorModeValue("gray.100", "gray.700");
 
   return (
-    <Box bg={bg} p="4" borderRadius="md">
+    <Box bg={bg} p="4" borderRadius="20px">
       <Flex align="center">
         <Avatar size="sm" name={comment.author} mr="3" />
         <Box>

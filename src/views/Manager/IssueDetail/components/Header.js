@@ -7,9 +7,17 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import PropTypes from "prop-types";
 
-function Header({ backgroundHeader, issueName, status, priority, type }) {
+function Header({
+  backgroundHeader,
+  issueName,
+  status,
+  priority,
+  type,
+  handleGoBack,
+}) {
   const textColor = useColorModeValue("gray.700", "white");
   const bgProfile = useColorModeValue(
     "hsla(0,0%,100%,.8)",
@@ -41,6 +49,30 @@ function Header({ backgroundHeader, issueName, status, priority, type }) {
         display="flex"
         justifyContent="center"
       >
+        <Flex
+          onClick={handleGoBack}
+          position="absolute"
+          top="20px"
+          left="20px"
+          zIndex="1"
+          align="center"
+          w={{ sm: "100%", lg: "135px" }}
+          bg="hsla(0,0%,100%,.3)"
+          borderRadius="15px"
+          justifyContent="center"
+          py="10px"
+          pl="10px"
+          boxShadow="inset 0 0 1px 1px hsl(0deg 0% 100% / 90%), 0 20px 27px 0 rgb(0 0 0 / 5%)"
+          border="1px solid gray.200"
+          cursor="pointer"
+          _hover={{ bg: "hsla(0,0%,100%,.4)" }}
+          _active={{ bg: "hsla(0,0%,100%,.5)" }}
+        >
+          <ArrowBackIcon color={textColor} position="absolute" left="15px" />
+          <Text fontSize="sm" color={textColor} fontWeight="bold">
+            Go Back
+          </Text>
+        </Flex>
         <Flex
           direction={{ sm: "column", md: "row" }}
           mx="1.5rem"
@@ -142,6 +174,7 @@ Header.propTypes = {
   status: PropTypes.string.isRequired,
   priority: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  handleGoBack: PropTypes.func.isRequired,
 };
 
 export default Header;

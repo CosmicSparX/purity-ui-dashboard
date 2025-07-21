@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { Flex, Grid } from "@chakra-ui/react";
 
 import Comments from "./components/Comments";
@@ -70,6 +70,7 @@ const developers = [
 
 function IssueDetail() {
   let { issueId } = useParams();
+  const history = useHistory();
   const [issue, setIssue] = useState(issuesData[issueId]);
   const [newComment, setNewComment] = useState("");
   const [selectedDeveloper, setSelectedDeveloper] = useState("");
@@ -104,6 +105,10 @@ function IssueDetail() {
     }
   };
 
+  const handleGoBack = () => {
+    history.goBack();
+  };
+
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }} gap="22px">
       <Header
@@ -112,9 +117,10 @@ function IssueDetail() {
         status={issue.status}
         priority={issue.priority}
         type={issue.type}
+        handleGoBack={handleGoBack}
       />
 
-      <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="22px" mt="80px">
+      <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="22px">
         <IssueInfo description={issue.description} />
         <Flex direction="column" gap="22px">
           <AssignedToSection
