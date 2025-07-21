@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import {
   Flex,
   Table,
@@ -7,6 +7,9 @@ import {
   Tr,
   Th,
   useColorModeValue,
+  Input,
+  Checkbox,
+  Text,
 } from "@chakra-ui/react";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -35,30 +38,87 @@ const projectsData = [
     closedIssues: 100,
     criticalOpenIssues: 0,
   },
+  {
+    id: 4,
+    name: "Project Delta",
+    openIssues: 15,
+    closedIssues: 30,
+    criticalOpenIssues: 3,
+  },
+  {
+    id: 5,
+    name: "Project Epsilon",
+    openIssues: 0,
+    closedIssues: 70,
+    criticalOpenIssues: 0,
+  },
 ];
 
 function Projects() {
   const textColor = useColorModeValue("gray.700", "white");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showCriticalOnly, setShowCriticalOnly] = useState(false);
+
+  const filteredProjects = useMemo(() => {
+    let tempProjects = projectsData;
+
+    if (searchTerm) {
+      tempProjects = tempProjects.filter((project) =>
+        project.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (showCriticalOnly) {
+      tempProjects = tempProjects.filter(
+        (project) => project.criticalOpenIssues > 0
+      );
+    }
+
+    return tempProjects;
+  }, [searchTerm, showCriticalOnly]);
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <Card>
-        <CardHeader>
-          <h2>Projects</h2>
+      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+        <CardHeader p="6px 0px 22px 0px">
+          <Flex direction="column">
+            <Text fontSize="xl" color={textColor} fontWeight="bold" mb="10px">
+              Projects
+            </Text>
+            <Flex mb="20px" wrap="wrap" alignItems="center">
+              <Input
+                placeholder="Search projects..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                width={{ base: "100%", md: "250px" }}
+                mr={{ base: "0", md: "20px" }}
+                mb={{ base: "10px", md: "0" }}
+              />
+              <Checkbox
+                isChecked={showCriticalOnly}
+                onChange={(e) => setShowCriticalOnly(e.target.checked)}
+                colorScheme="red"
+              >
+                Show Critical Only
+              </Checkbox>
+            </Flex>
+          </Flex>
         </CardHeader>
         <CardBody>
           <Table variant="simple" color={textColor}>
             <Thead>
-              <Tr>
-                <Th>Project Name</Th>
-                <Th>Open Issues</Th>
-                <Th>Closed Issues</Th>
-                <Th>Critical Open Issues</Th>
-                <Th>Details</Th>
+              <Tr my=".8rem" ps="0px">
+                <Th color="gray.400" ps="0px">
+                  Project Name
+                </Th>
+                <Th color="gray.400">Open Issues</Th>
+                <Th color="gray.400">Closed Issues</Th>
+                <Th color="gray.400">Critical Open Issues</Th>
+                <Th color="gray.400"></Th>
               </Tr>
             </Thead>
             <Tbody>
-              {projectsData.map((project) => (
+              {filteredProjects.map((project) => (
                 <ProjectRow key={project.id} project={project} />
               ))}
             </Tbody>

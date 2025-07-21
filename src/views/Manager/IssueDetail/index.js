@@ -9,7 +9,6 @@ import {
   VStack,
   useColorModeValue,
   Box,
-  Image,
   Stat,
   StatLabel,
   StatNumber,
@@ -22,7 +21,6 @@ import CardHeader from "components/Card/CardHeader.js";
 import Comment from "./components/Comment";
 
 import ProfileBgImage from "assets/img/ProfileBackground.png";
-import avatar from "assets/img/avatars/avatar2.png"; // Using a generic avatar
 
 const issuesData = {
   1: {
@@ -128,21 +126,13 @@ function IssueDetail() {
           borderRadius="20px"
           p="20px"
         >
-          <Flex align="center" mb={{ sm: "10px", md: "0px" }}>
-            <Image
-              src={avatar}
-              boxSize="80px"
-              borderRadius="15px"
-              me={{ sm: "0px", md: "22px" }}
-            />
-            <Flex direction="column">
-              <Heading as="h2" size="lg" color={textColor}>
-                {issue.name}
-              </Heading>
-              <Text fontSize="md" color="gray.400">
-                Issue ID: {issueId}
-              </Text>
-            </Flex>
+          <Flex direction="column">
+            <Heading as="h2" size="lg" color={textColor}>
+              {issue.name}
+            </Heading>
+            <Text fontSize="md" color="gray.400">
+              Issue ID: {issueId}
+            </Text>
           </Flex>
           <SimpleGrid columns={{ sm: 1, md: 3 }} spacing="20px">
             <Stat textAlign="center">
@@ -173,7 +163,7 @@ function IssueDetail() {
         </Flex>
       </Box>
 
-      <Grid templateColumns={{ sm: "1fr", xl: "1fr 2fr" }} gap="22px" mt="80px">
+      <Grid templateColumns={{ sm: "1fr" }} gap="22px" mt="80px">
         <Card>
           <CardHeader>
             <Heading as="h3" size="md">
@@ -205,6 +195,7 @@ function IssueDetail() {
                 value={newComment}
                 onChange={handleCommentChange}
                 placeholder="Add a comment..."
+                mb="10px"
               />
               <Button onClick={handleCommentSubmit}>Submit</Button>
             </VStack>
