@@ -103,7 +103,7 @@ function UserManagement() {
       const payload = {
         username: formData.username,
         email: formData.email,
-        role_name: formData.role,
+        roles: [{ role_name: formData.role }],
       };
 
       if (formData.password) {
