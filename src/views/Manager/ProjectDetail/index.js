@@ -17,8 +17,6 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import ProjectIssueRow from "./components/ProjectIssueRow";
 
-
-
 const projectsData = {
   1: {
     name: "Project Alpha",
@@ -97,7 +95,7 @@ function ProjectDetail() {
               Project Information
             </Heading>
           </CardHeader>
-          <CardBody>
+          <CardBody pt="20px">
             <Text fontSize="md" color={textColor}>
               {project.description}
             </Text>
@@ -110,7 +108,7 @@ function ProjectDetail() {
               Issues for this Project
             </Heading>
           </CardHeader>
-          <CardBody>
+          <CardBody pt="20px">
             <Table variant="simple" color={textColor}>
               <Thead>
                 <Tr>

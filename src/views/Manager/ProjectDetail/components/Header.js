@@ -4,15 +4,18 @@ import {
   Flex,
   Heading,
   SimpleGrid,
-  Stat,
-  StatLabel,
-  StatNumber,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
-import ProfileBgImage from "assets/img/ProfileBackground.png";
 
-function Header({ backgroundHeader, name, totalIssues, openIssues, closedIssues }) {
+function Header({
+  backgroundHeader,
+  name,
+  totalIssues,
+  openIssues,
+  closedIssues,
+}) {
   const textColor = useColorModeValue("gray.700", "white");
   const bgProfile = useColorModeValue(
     "hsla(0,0%,100%,.8)",
@@ -62,7 +65,7 @@ function Header({ backgroundHeader, name, totalIssues, openIssues, closedIssues 
           transform={{
             sm: "translateY(45%)",
             md: "translateY(110%)",
-            lg: "translateY(160%)",
+            lg: "translateY(200%)",
           }}
         >
           <Flex
@@ -84,30 +87,54 @@ function Header({ backgroundHeader, name, totalIssues, openIssues, closedIssues 
             </Flex>
           </Flex>
           <SimpleGrid columns={{ sm: 1, md: 3 }} spacing="20px">
-            <Stat textAlign="center">
-              <StatLabel fontSize="sm" color="gray.400">
-                Total Issues
-              </StatLabel>
-              <StatNumber fontSize="lg" color={textColor}>
-                {totalIssues}
-              </StatNumber>
-            </Stat>
-            <Stat textAlign="center">
-              <StatLabel fontSize="sm" color="gray.400">
-                Open Issues
-              </StatLabel>
-              <StatNumber fontSize="lg" color={textColor}>
-                {openIssues}
-              </StatNumber>
-            </Stat>
-            <Stat textAlign="center">
-              <StatLabel fontSize="sm" color="gray.400">
-                Closed Issues
-              </StatLabel>
-              <StatNumber fontSize="lg" color={textColor}>
-                {closedIssues}
-              </StatNumber>
-            </Stat>
+            <Flex
+              mr="60px"
+              align="center"
+              w={{ sm: "100%", lg: "135px" }}
+              bg="hsla(0,0%,100%,.3)"
+              borderRadius="15px"
+              justifyContent="center"
+              py="10px"
+              boxShadow="inset 0 0 1px 1px hsl(0deg 0% 100% / 90%), 0 20px 27px 0 rgb(0 0 0 / 5%)"
+              border="1px solid gray.200"
+              cursor="pointer"
+            >
+              <Text fontSize="xs" color={textColor} fontWeight="bold" ms="6px">
+                Total Issues: {totalIssues}
+              </Text>
+            </Flex>
+            <Flex
+              mr="60px"
+              align="center"
+              w={{ sm: "100%", lg: "135px" }}
+              bg="hsla(0,0%,100%,.3)"
+              borderRadius="15px"
+              justifyContent="center"
+              py="10px"
+              boxShadow="inset 0 0 1px 1px hsl(0deg 0% 100% / 90%), 0 20px 27px 0 rgb(0 0 0 / 5%)"
+              border="1px solid gray.200"
+              cursor="pointer"
+            >
+              <Text fontSize="xs" color={textColor} fontWeight="bold" ms="6px">
+                Open Issues: {openIssues}
+              </Text>
+            </Flex>
+            <Flex
+              mr="60px"
+              align="center"
+              w={{ sm: "100%", lg: "135px" }}
+              bg="hsla(0,0%,100%,.3)"
+              borderRadius="15px"
+              justifyContent="center"
+              py="10px"
+              boxShadow="inset 0 0 1px 1px hsl(0deg 0% 100% / 90%), 0 20px 27px 0 rgb(0 0 0 / 5%)"
+              border="1px solid gray.200"
+              cursor="pointer"
+            >
+              <Text fontSize="xs" color={textColor} fontWeight="bold" ms="6px">
+                Closed Issues: {closedIssues}
+              </Text>
+            </Flex>
           </SimpleGrid>
         </Flex>
       </Box>

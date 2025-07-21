@@ -29,7 +29,10 @@ function IssueInfo({ issue }) {
 }
 
 IssueInfo.propTypes = {
-  issue: PropTypes.object.isRequired,
+  issue: PropTypes.shape({
+    assignedTo: PropTypes.string,
+    description: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default IssueInfo;
