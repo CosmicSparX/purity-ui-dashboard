@@ -107,7 +107,7 @@ export default function DashboardLayout(props) {
                       // If it's the account category, map through its views
                       return prop.views.map((view, viewKey) => (
                         <Route
-                          path={layoutPrefix + view.path}
+                          path={view.layout + view.path}
                           component={view.component}
                           key={viewKey}
                         />

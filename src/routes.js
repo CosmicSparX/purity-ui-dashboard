@@ -2,11 +2,20 @@ import Dashboard from "views/Dashboard/Dashboard";
 import Profile from "views/Dashboard/Profile";
 import SignIn from "views/Auth/SignIn.js";
 import UserManagement from "views/Dashboard/UserManagement";
-import ManagerDashboard from "views/Dashboard/ManagerDashboard";
+import ManagerDashboard from "views/Manager/General";
+import Projects from "views/Manager/Projects";
+import Issues from "views/Manager/Issues";
+import ProjectDetail from "views/Manager/ProjectDetail";
+import IssueDetail from "views/Manager/IssueDetail";
 import TesterDashboard from "views/Dashboard/TesterDashboard";
 import DeveloperDashboard from "views/Dashboard/DeveloperDashboard";
 
-import { HomeIcon, PersonIcon, DocumentIcon } from "components/Icons/Icons";
+import {
+  HomeIcon,
+  PersonIcon,
+  DocumentIcon,
+  HelpIcon,
+} from "components/Icons/Icons";
 
 var dashRoutes = [
   {
@@ -29,6 +38,36 @@ var dashRoutes = [
     icon: <HomeIcon color="inherit" />,
     component: ManagerDashboard,
     layout: "/manager",
+  },
+  {
+    path: "/projects/:projectId",
+    name: "Project Detail",
+    component: ProjectDetail,
+    layout: "/manager",
+    invisible: true,
+  },
+  {
+    path: "/projects",
+    name: "Projects",
+    icon: <DocumentIcon color="inherit" />,
+    component: Projects,
+    layout: "/manager",
+    exact: true,
+  },
+  {
+    path: "/issues/:issueId",
+    name: "Issue Detail",
+    component: IssueDetail,
+    layout: "/manager",
+    invisible: true,
+  },
+  {
+    path: "/issues",
+    name: "Issues",
+    icon: <HelpIcon color="inherit" />,
+    component: Issues,
+    layout: "/manager",
+    exact: true,
   },
   {
     path: "/dashboard",

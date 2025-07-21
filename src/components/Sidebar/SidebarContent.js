@@ -37,7 +37,7 @@ const SidebarContent = ({ logoText, routes }) => {
     const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
-      if (prop.redirect) {
+      if (prop.redirect || prop.invisible) {
         return null;
       }
       if (prop.category) {
