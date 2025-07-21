@@ -1,27 +1,24 @@
 import React from "react";
-import { Heading, Text, useColorModeValue } from "@chakra-ui/react";
+import { Text, useColorModeValue } from "@chakra-ui/react";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 
 import PropTypes from "prop-types";
 
-function IssueInfo({ issue }) {
+function IssueInfo({ description }) {
   const textColor = useColorModeValue("gray.700", "white");
 
   return (
     <Card>
       <CardHeader>
-        <Heading as="h3" size="md">
-          Issue Information
-        </Heading>
+        <Text fontSize="lg" color={textColor} fontWeight="bold">
+          Description
+        </Text>
       </CardHeader>
       <CardBody>
         <Text fontSize="md" color={textColor}>
-          <strong>Assigned To:</strong> {issue.assignedTo}
-        </Text>
-        <Text mt="4" fontSize="md" color={textColor}>
-          {issue.description}
+          {description}
         </Text>
       </CardBody>
     </Card>
@@ -29,10 +26,7 @@ function IssueInfo({ issue }) {
 }
 
 IssueInfo.propTypes = {
-  issue: PropTypes.shape({
-    assignedTo: PropTypes.string,
-    description: PropTypes.string.isRequired,
-  }).isRequired,
+  description: PropTypes.string.isRequired,
 };
 
 export default IssueInfo;
