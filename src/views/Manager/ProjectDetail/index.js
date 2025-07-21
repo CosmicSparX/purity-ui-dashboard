@@ -10,12 +10,6 @@ import {
   Tr,
   Th,
   useColorModeValue,
-  Box,
-  Image,
-  Stat,
-  StatLabel,
-  StatNumber,
-  SimpleGrid,
   Grid,
 } from "@chakra-ui/react";
 import Card from "components/Card/Card.js";
@@ -23,8 +17,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import ProjectIssueRow from "./components/ProjectIssueRow";
 
-import ProfileBgImage from "assets/img/ProfileBackground.png";
-import avatar from "assets/img/avatars/avatar1.png"; // Using a generic avatar
+
 
 const projectsData = {
   1: {
@@ -76,14 +69,13 @@ const projectsData = {
   },
 };
 
+import Header from "./components/Header";
+import ProfileBgImage from "assets/img/ProfileBackground.png";
+
 function ProjectDetail() {
   let { projectId } = useParams();
   const project = projectsData[projectId];
   const textColor = useColorModeValue("gray.700", "white");
-  const bgProfile = useColorModeValue(
-    "hsla(0,0%,100%,.8)",
-    "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
-  );
 
   if (!project) {
     return <div>Project not found</div>;
@@ -91,80 +83,14 @@ function ProjectDetail() {
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Box
-        mb={{ sm: "20px", md: "50px", lg: "20px" }}
-        borderRadius="15px"
-        px="30px"
-        mx={{ base: "auto", lg: "0px" }}
-        pt={{ base: "100px", md: "100px" }}
-        bgImage={ProfileBgImage}
-        bgSize="cover"
-        maxW="100%"
-        w={{ sm: "100%", md: "100%" }}
-        h={{ sm: "200px", md: "200px" }}
-        position="relative"
-      >
-        <Flex
-          direction={{ sm: "column", md: "row" }}
-          mx="auto"
-          w={{ sm: "90%", lg: "100%" }}
-          justifyContent={{ sm: "center", md: "space-between" }}
-          align="center"
-          position="absolute"
-          bottom="-20px"
-          left="0"
-          right="0"
-          bg={bgProfile}
-          boxShadow="0px 18px 40px rgba(112, 144, 176, 0.12)"
-          borderRadius="20px"
-          p="20px"
-        >
-          <Flex align="center" mb={{ sm: "10px", md: "0px" }}>
-            <Image
-              src={avatar}
-              boxSize="80px"
-              borderRadius="15px"
-              me={{ sm: "0px", md: "22px" }}
-            />
-            <Flex direction="column">
-              <Heading as="h2" size="lg" color={textColor}>
-                {project.name}
-              </Heading>
-              <Text fontSize="md" color="gray.400">
-                Project ID: {projectId}
-              </Text>
-            </Flex>
-          </Flex>
-          <SimpleGrid columns={{ sm: 1, md: 3 }} spacing="20px">
-            <Stat textAlign="center">
-              <StatLabel fontSize="sm" color="gray.400">
-                Total Issues
-              </StatLabel>
-              <StatNumber fontSize="lg" color={textColor}>
-                {project.totalIssues}
-              </StatNumber>
-            </Stat>
-            <Stat textAlign="center">
-              <StatLabel fontSize="sm" color="gray.400">
-                Open Issues
-              </StatLabel>
-              <StatNumber fontSize="lg" color={textColor}>
-                {project.openIssues}
-              </StatNumber>
-            </Stat>
-            <Stat textAlign="center">
-              <StatLabel fontSize="sm" color="gray.400">
-                Closed Issues
-              </StatLabel>
-              <StatNumber fontSize="lg" color={textColor}>
-                {project.closedIssues}
-              </StatNumber>
-            </Stat>
-          </SimpleGrid>
-        </Flex>
-      </Box>
-
-      <Grid templateColumns={{ sm: "1fr", xl: "1fr 2fr" }} gap="22px" mt="80px">
+      <Header
+        backgroundHeader={ProfileBgImage}
+        name={project.name}
+        totalIssues={project.totalIssues}
+        openIssues={project.openIssues}
+        closedIssues={project.closedIssues}
+      />
+      <Grid templateColumns={{ sm: "1fr", xl: "1fr 2fr" }} gap="22px" mt="20px">
         <Card>
           <CardHeader>
             <Heading as="h3" size="md">

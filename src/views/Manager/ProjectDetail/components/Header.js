@@ -1,0 +1,126 @@
+import React from "react";
+import {
+  Box,
+  Flex,
+  Heading,
+  SimpleGrid,
+  Stat,
+  StatLabel,
+  StatNumber,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import PropTypes from "prop-types";
+import ProfileBgImage from "assets/img/ProfileBackground.png";
+
+function Header({ backgroundHeader, name, totalIssues, openIssues, closedIssues }) {
+  const textColor = useColorModeValue("gray.700", "white");
+  const bgProfile = useColorModeValue(
+    "hsla(0,0%,100%,.8)",
+    "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
+  );
+  const borderProfileColor = useColorModeValue(
+    "white",
+    "rgba(255, 255, 255, 0.31)"
+  );
+
+  return (
+    <Box
+      mb={{ sm: "205px", md: "75px", xl: "70px" }}
+      borderRadius="15px"
+      px="0px"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      align="center"
+    >
+      <Box
+        bgImage={backgroundHeader}
+        w="100%"
+        h="300px"
+        borderRadius="25px"
+        bgPosition="50%"
+        bgRepeat="no-repeat"
+        position="relative"
+        display="flex"
+        justifyContent="center"
+      >
+        <Flex
+          direction={{ sm: "column", md: "row" }}
+          mx="1.5rem"
+          maxH="330px"
+          w={{ sm: "90%", xl: "95%" }}
+          justifyContent={{ sm: "center", md: "space-between" }}
+          align="center"
+          backdropFilter="saturate(200%) blur(50px)"
+          position="absolute"
+          boxShadow="0px 2px 5.5px rgba(0, 0, 0, 0.02)"
+          border="2px solid"
+          borderColor={borderProfileColor}
+          bg={bgProfile}
+          p="24px"
+          borderRadius="20px"
+          transform={{
+            sm: "translateY(45%)",
+            md: "translateY(110%)",
+            lg: "translateY(160%)",
+          }}
+        >
+          <Flex
+            align="center"
+            mb={{ sm: "10px", md: "0px" }}
+            direction={{ sm: "column", md: "row" }}
+            w={{ sm: "100%" }}
+            textAlign={{ sm: "center", md: "start" }}
+          >
+            <Flex direction="column" maxWidth="100%" my={{ sm: "14px" }}>
+              <Heading
+                as="h2"
+                size="lg"
+                color={textColor}
+                ms={{ sm: "8px", md: "0px" }}
+              >
+                {name}
+              </Heading>
+            </Flex>
+          </Flex>
+          <SimpleGrid columns={{ sm: 1, md: 3 }} spacing="20px">
+            <Stat textAlign="center">
+              <StatLabel fontSize="sm" color="gray.400">
+                Total Issues
+              </StatLabel>
+              <StatNumber fontSize="lg" color={textColor}>
+                {totalIssues}
+              </StatNumber>
+            </Stat>
+            <Stat textAlign="center">
+              <StatLabel fontSize="sm" color="gray.400">
+                Open Issues
+              </StatLabel>
+              <StatNumber fontSize="lg" color={textColor}>
+                {openIssues}
+              </StatNumber>
+            </Stat>
+            <Stat textAlign="center">
+              <StatLabel fontSize="sm" color="gray.400">
+                Closed Issues
+              </StatLabel>
+              <StatNumber fontSize="lg" color={textColor}>
+                {closedIssues}
+              </StatNumber>
+            </Stat>
+          </SimpleGrid>
+        </Flex>
+      </Box>
+    </Box>
+  );
+}
+
+Header.propTypes = {
+  backgroundHeader: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  totalIssues: PropTypes.number.isRequired,
+  openIssues: PropTypes.number.isRequired,
+  closedIssues: PropTypes.number.isRequired,
+};
+
+export default Header;
