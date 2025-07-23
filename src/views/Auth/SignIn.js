@@ -9,7 +9,6 @@ import {
   FormLabel,
   Heading,
   Input,
-  Switch,
   Text,
   useColorModeValue,
   Spinner, // Import Spinner
@@ -166,17 +165,6 @@ function SignIn() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <FormControl display="flex" alignItems="center">
-            <Switch id="remember-login" colorScheme="teal" me="10px" />
-            <FormLabel
-              htmlFor="remember-login"
-              mb="0"
-              ms="1"
-              fontWeight="normal"
-            >
-              Remember me
-            </FormLabel>
-          </FormControl>
           <Button
             fontSize="10px"
             type="submit"

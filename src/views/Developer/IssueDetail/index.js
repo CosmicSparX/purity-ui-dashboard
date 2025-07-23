@@ -5,10 +5,11 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 
-import Comments from "components/Common/IssueDetailComponents/Comments";
 import IssueInfo from "components/Common/IssueDetailComponents/IssueInfo";
 import AssignedToSection from "components/Common/IssueDetailComponents/AssignedToSection";
 import IssueHeader from "components/Common/IssueDetailComponents/IssueHeader";
+import AttachedDocumentsSection from "components/Common/IssueDetailComponents/AttachedDocumentsSection";
+import Comments from "components/Common/IssueDetailComponents/Comments";
 
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 
@@ -98,10 +99,12 @@ function IssueDetail() {
 
       <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="22px">
         <Flex direction="column" gap="22px">
-          <IssueInfo
-            description={issue.description}
-            attachedDocuments={issue.attachedDocuments}
-          />
+          <Grid templateColumns={{ sm: "1fr", md: "1fr 1fr" }} gap="22px">
+            <IssueInfo description={issue.description} />
+            <AttachedDocumentsSection
+              attachedDocuments={issue.attachedDocuments}
+            />
+          </Grid>
           <Card>
             <CardHeader
               display="flex"
@@ -133,7 +136,11 @@ function IssueDetail() {
                     <Button onClick={handleSavePlan} colorScheme="blue">
                       Save Plan
                     </Button>
-                    <Button onClick={handleCancelEditPlan} variant="ghost" ml="10px">
+                    <Button
+                      onClick={handleCancelEditPlan}
+                      variant="ghost"
+                      ml="10px"
+                    >
                       Cancel
                     </Button>
                   </Flex>
