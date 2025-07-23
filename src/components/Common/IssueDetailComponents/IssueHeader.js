@@ -10,13 +10,14 @@ import {
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import PropTypes from "prop-types";
 
-function Header({
+function IssueHeader({
   backgroundHeader,
   issueName,
   status,
   priority,
-  type,
   handleGoBack,
+  projectId,
+  issueId,
 }) {
   const textColor = useColorModeValue("gray.700", "white");
   const bgProfile = useColorModeValue(
@@ -77,7 +78,7 @@ function Header({
           direction={{ sm: "column", md: "row" }}
           mx="1.5rem"
           maxH="330px"
-          w={{ sm: "90%", xl: "95%" }}
+          w="100%"
           justifyContent={{ sm: "center", md: "space-between" }}
           align="center"
           backdropFilter="saturate(200%) blur(50px)"
@@ -112,11 +113,11 @@ function Header({
               </Heading>
             </Flex>
           </Flex>
-          <SimpleGrid columns={{ sm: 1, md: 3 }} spacing="20px">
+          <SimpleGrid columns={{ sm: 1, md: 2, lg: 4 }} spacing="20px">
             <Flex
-              mr="60px"
               align="center"
-              w={{ sm: "100%", lg: "135px" }}
+              mr="100px"
+              w={{ base: "100%", md: "135px" }}
               bg="hsla(0,0%,100%,.3)"
               borderRadius="15px"
               justifyContent="center"
@@ -130,9 +131,9 @@ function Header({
               </Text>
             </Flex>
             <Flex
-              mr="60px"
               align="center"
-              w={{ sm: "100%", lg: "135px" }}
+              mr="100px"
+              w={{ base: "100%", md: "135px" }}
               bg="hsla(0,0%,100%,.3)"
               borderRadius="15px"
               justifyContent="center"
@@ -145,10 +146,11 @@ function Header({
                 Priority: {priority}
               </Text>
             </Flex>
+
             <Flex
-              mr="60px"
               align="center"
-              w={{ sm: "100%", lg: "135px" }}
+              mr="100px"
+              w={{ base: "100%", md: "135px" }}
               bg="hsla(0,0%,100%,.3)"
               borderRadius="15px"
               justifyContent="center"
@@ -158,7 +160,23 @@ function Header({
               cursor="pointer"
             >
               <Text fontSize="xs" color={textColor} fontWeight="bold" ms="6px">
-                Type: {type}
+                Project ID: {projectId}
+              </Text>
+            </Flex>
+            <Flex
+              align="center"
+              mr="100px"
+              w={{ base: "100%", md: "135px" }}
+              bg="hsla(0,0%,100%,.3)"
+              borderRadius="15px"
+              justifyContent="center"
+              py="10px"
+              boxShadow="inset 0 0 1px 1px hsl(0deg 0% 100% / 90%), 0 20px 27px 0 rgb(0 0 0 / 5%)"
+              border="1px solid gray.200"
+              cursor="pointer"
+            >
+              <Text fontSize="xs" color={textColor} fontWeight="bold" ms="6px">
+                Issue ID: {issueId}
               </Text>
             </Flex>
           </SimpleGrid>
@@ -168,13 +186,14 @@ function Header({
   );
 }
 
-Header.propTypes = {
+IssueHeader.propTypes = {
   backgroundHeader: PropTypes.string.isRequired,
   issueName: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   priority: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
   handleGoBack: PropTypes.func.isRequired,
+  projectId: PropTypes.string.isRequired,
+  issueId: PropTypes.number.isRequired,
 };
 
-export default Header;
+export default IssueHeader;

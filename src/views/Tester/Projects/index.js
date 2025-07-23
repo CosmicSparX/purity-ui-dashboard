@@ -81,6 +81,12 @@ function Projects() {
       );
     }
 
+    if (userRole === "tester") {
+      tempProjects = tempProjects.filter((project) =>
+        project.assignedTo.includes(userId)
+      );
+    }
+
     return tempProjects;
   }, [searchTerm, showCriticalOnly, userRole, userId]);
 

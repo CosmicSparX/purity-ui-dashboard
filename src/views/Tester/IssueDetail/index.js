@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import CardHeader from "components/Card/CardHeader.js";
 import { Flex, Grid, Text } from "@chakra-ui/react";
+import Card from "components/Card/Card";
+import CardHeader from "components/Card/CardHeader";
+import CardBody from "components/Card/CardBody";
 
 import Comments from "components/Common/IssueDetailComponents/Comments";
 import IssueInfo from "components/Common/IssueDetailComponents/IssueInfo";
@@ -16,7 +16,6 @@ import { issuesData, developers } from "variables/issuesData";
 
 function IssueDetail() {
   let { issueId } = useParams();
-
   const [issue, setIssue] = useState(issuesData[issueId]);
   const [newComment, setNewComment] = useState("");
   const [selectedDeveloper, setSelectedDeveloper] = useState("");
@@ -75,14 +74,6 @@ function IssueDetail() {
           attachedDocuments={issue.attachedDocuments}
         />
         <Flex direction="column" gap="22px">
-          <AssignedToSection
-            assignedTo={issue.assignedTo}
-            status={issue.status}
-            onAssignClick={handleAssignClick}
-            onDeveloperSelect={handleDeveloperSelect}
-            developers={developers}
-            selectedDeveloper={selectedDeveloper}
-          />
           <Card>
             <CardHeader>
               <Text fontSize="lg" fontWeight="bold">
@@ -93,6 +84,14 @@ function IssueDetail() {
               <Text fontSize="md">{issue.reportedBy}</Text>
             </CardBody>
           </Card>
+          <AssignedToSection
+            assignedTo={issue.assignedTo}
+            status={issue.status}
+            onAssignClick={handleAssignClick}
+            onDeveloperSelect={handleDeveloperSelect}
+            developers={developers}
+            selectedDeveloper={selectedDeveloper}
+          />
           <Comments
             comments={issue.comments}
             newComment={newComment}

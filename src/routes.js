@@ -10,10 +10,12 @@ import IssueDetail from "views/Manager/IssueDetail";
 import TesterProjects from "views/Tester/Projects";
 import TesterIssues from "views/Tester/Issues";
 import TesterProjectDetail from "views/Tester/ProjectDetail";
+import TesterIssueDetail from "views/Tester/IssueDetail";
 import DeveloperDashboard from "views/Developer/DeveloperDashboard";
 import DeveloperProjects from "views/Developer/Projects";
 import DeveloperIssues from "views/Developer/Issues";
 import DeveloperProjectDetail from "views/Developer/ProjectDetail";
+import DeveloperIssueDetail from "views/Developer/IssueDetail";
 import TesterDashboard from "views/Tester/TesterDashboard";
 
 import {
@@ -76,6 +78,20 @@ var dashRoutes = [
     exact: true,
   },
   {
+    path: "/projects/:projectId",
+    name: "Tester Project Detail",
+    component: TesterProjectDetail,
+    layout: "/tester",
+    invisible: true,
+  },
+  {
+    path: "/issues/:issueId",
+    name: "Tester Issue Detail",
+    component: TesterIssueDetail,
+    layout: "/tester",
+    invisible: true,
+  },
+  {
     path: "/projects",
     name: "Tester Projects",
     icon: <DocumentIcon color="inherit" />,
@@ -92,20 +108,6 @@ var dashRoutes = [
     exact: true,
   },
   {
-    path: "/projects/:projectId",
-    name: "Tester Project Detail",
-    component: TesterProjectDetail,
-    layout: "/tester",
-    invisible: true,
-  },
-  {
-    path: "/issues/:issueId",
-    name: "Tester Issue Detail",
-    component: TesterProjectDetail, // Assuming ProjectDetail can also show issue details or you'll create a separate one
-    layout: "/tester",
-    invisible: true,
-  },
-  {
     path: "/dashboard",
     name: "Developer Dashboard",
     icon: <HomeIcon color="inherit" />,
@@ -118,6 +120,20 @@ var dashRoutes = [
     icon: <HomeIcon color="inherit" />,
     component: TesterDashboard,
     layout: "/tester",
+  },
+  {
+    path: "/projects/:projectId",
+    name: "Developer Project Detail",
+    component: DeveloperProjectDetail,
+    layout: "/developer",
+    invisible: true,
+  },
+  {
+    path: "/issues/:issueId",
+    name: "Developer Issue Detail",
+    component: DeveloperIssueDetail,
+    layout: "/developer",
+    invisible: true,
   },
   {
     path: "/projects",
@@ -134,20 +150,6 @@ var dashRoutes = [
     component: DeveloperIssues,
     layout: "/developer",
     exact: true,
-  },
-  {
-    path: "/projects/:projectId",
-    name: "Developer Project Detail",
-    component: DeveloperProjectDetail,
-    layout: "/developer",
-    invisible: true,
-  },
-  {
-    path: "/issues/:issueId",
-    name: "Developer Issue Detail",
-    component: DeveloperProjectDetail, // Assuming ProjectDetail can also show issue details or you'll create a separate one
-    layout: "/developer",
-    invisible: true,
   },
   {
     path: "/dashboard",

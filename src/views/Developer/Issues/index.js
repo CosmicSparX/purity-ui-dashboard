@@ -92,6 +92,12 @@ function Issues() {
       tempIssues = tempIssues.filter((issue) => issue.priority === "High");
     }
 
+    if (userRole === "developer") {
+      tempIssues = tempIssues.filter((issue) =>
+        issue.assignedTo.includes(userId)
+      );
+    }
+
     return tempIssues;
   }, [searchTerm, statusFilter, showCriticalOnly, userRole, userId]);
 

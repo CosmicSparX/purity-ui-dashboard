@@ -106,6 +106,7 @@ import ProfileBgImage from "assets/img/ProfileBackground.png";
 
 function ProjectDetail() {
   let { projectId } = useParams();
+  console.log("Tester ProjectDetail - projectId:", projectId);
 
   // const userRole = "tester"; // This will be dynamic based on logged-in user
   // const userId = "tester1"; // This will be dynamic based on logged-in user
