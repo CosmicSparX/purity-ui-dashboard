@@ -66,6 +66,8 @@ const issuesData = [
 ];
 
 function Issues() {
+  const userRole = "tester"; // This will be dynamic based on logged-in user
+  const userId = "tester1"; // This will be dynamic based on logged-in user
   const textColor = useColorModeValue("gray.700", "white");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -91,7 +93,7 @@ function Issues() {
     }
 
     return tempIssues;
-  }, [searchTerm, statusFilter, showCriticalOnly]);
+  }, [searchTerm, statusFilter, showCriticalOnly, userRole, userId]);
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -146,7 +148,7 @@ function Issues() {
             </Thead>
             <Tbody>
               {filteredIssues.map((issue) => (
-                <IssueRow key={issue.id} issue={issue} layout="/manager" />
+                <IssueRow key={issue.id} issue={issue} layout="/tester" />
               ))}
             </Tbody>
           </Table>

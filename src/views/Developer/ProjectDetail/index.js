@@ -104,6 +104,8 @@ import ProfileBgImage from "assets/img/ProfileBackground.png";
 function ProjectDetail() {
   let { projectId } = useParams();
 
+  // const userRole = "developer"; // This will be dynamic based on logged-in user
+  // const userId = "developer1"; // This will be dynamic based on logged-in user
   const project = projectsData[projectId];
   const textColor = useColorModeValue("gray.700", "white");
 
@@ -119,7 +121,7 @@ function ProjectDetail() {
         totalIssues={project.totalIssues}
         openIssues={project.openIssues}
         closedIssues={project.closedIssues}
-        layout="/manager"
+        layout="/developer"
       />
       <Grid templateColumns={{ sm: "1fr", xl: "1fr 2fr" }} gap="22px" mt="20px">
         <Card>
@@ -155,7 +157,7 @@ function ProjectDetail() {
                   <ProjectIssueRow
                     key={issue.id}
                     issue={issue}
-                    layout="/manager"
+                    layout="/developer"
                   />
                 ))}
               </Tbody>

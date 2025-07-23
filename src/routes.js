@@ -7,8 +7,14 @@ import Projects from "views/Manager/Projects";
 import Issues from "views/Manager/Issues";
 import ProjectDetail from "views/Manager/ProjectDetail";
 import IssueDetail from "views/Manager/IssueDetail";
-import TesterDashboard from "views/Dashboard/TesterDashboard";
-import DeveloperDashboard from "views/Dashboard/DeveloperDashboard";
+import TesterProjects from "views/Tester/Projects";
+import TesterIssues from "views/Tester/Issues";
+import TesterProjectDetail from "views/Tester/ProjectDetail";
+import DeveloperDashboard from "views/Developer/DeveloperDashboard";
+import DeveloperProjects from "views/Developer/Projects";
+import DeveloperIssues from "views/Developer/Issues";
+import DeveloperProjectDetail from "views/Developer/ProjectDetail";
+import TesterDashboard from "views/Tester/TesterDashboard";
 
 import {
   HomeIcon,
@@ -70,11 +76,34 @@ var dashRoutes = [
     exact: true,
   },
   {
-    path: "/dashboard",
-    name: "Tester Dashboard",
-    icon: <HomeIcon color="inherit" />,
-    component: TesterDashboard,
+    path: "/projects",
+    name: "Tester Projects",
+    icon: <DocumentIcon color="inherit" />,
+    component: TesterProjects,
     layout: "/tester",
+    exact: true,
+  },
+  {
+    path: "/issues",
+    name: "Tester Issues",
+    icon: <HelpIcon color="inherit" />,
+    component: TesterIssues,
+    layout: "/tester",
+    exact: true,
+  },
+  {
+    path: "/projects/:projectId",
+    name: "Tester Project Detail",
+    component: TesterProjectDetail,
+    layout: "/tester",
+    invisible: true,
+  },
+  {
+    path: "/issues/:issueId",
+    name: "Tester Issue Detail",
+    component: TesterProjectDetail, // Assuming ProjectDetail can also show issue details or you'll create a separate one
+    layout: "/tester",
+    invisible: true,
   },
   {
     path: "/dashboard",
@@ -82,6 +111,43 @@ var dashRoutes = [
     icon: <HomeIcon color="inherit" />,
     component: DeveloperDashboard,
     layout: "/developer",
+  },
+  {
+    path: "/dashboard",
+    name: "Tester Dashboard",
+    icon: <HomeIcon color="inherit" />,
+    component: TesterDashboard,
+    layout: "/tester",
+  },
+  {
+    path: "/projects",
+    name: "Developer Projects",
+    icon: <DocumentIcon color="inherit" />,
+    component: DeveloperProjects,
+    layout: "/developer",
+    exact: true,
+  },
+  {
+    path: "/issues",
+    name: "Developer Issues",
+    icon: <HelpIcon color="inherit" />,
+    component: DeveloperIssues,
+    layout: "/developer",
+    exact: true,
+  },
+  {
+    path: "/projects/:projectId",
+    name: "Developer Project Detail",
+    component: DeveloperProjectDetail,
+    layout: "/developer",
+    invisible: true,
+  },
+  {
+    path: "/issues/:issueId",
+    name: "Developer Issue Detail",
+    component: DeveloperProjectDetail, // Assuming ProjectDetail can also show issue details or you'll create a separate one
+    layout: "/developer",
+    invisible: true,
   },
   {
     path: "/dashboard",

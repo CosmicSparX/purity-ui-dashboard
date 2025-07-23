@@ -1,5 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { useDisclosure } from "@chakra-ui/react";
+import AddIssueModal from "components/AddIssue/AddIssueModal";
 import {
   Flex,
   Heading,
@@ -11,6 +13,7 @@ import {
   Th,
   useColorModeValue,
   Grid,
+  Button,
 } from "@chakra-ui/react";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -104,6 +107,8 @@ import ProfileBgImage from "assets/img/ProfileBackground.png";
 function ProjectDetail() {
   let { projectId } = useParams();
 
+  // const userRole = "tester"; // This will be dynamic based on logged-in user
+  // const userId = "tester1"; // This will be dynamic based on logged-in user
   const project = projectsData[projectId];
   const textColor = useColorModeValue("gray.700", "white");
 
@@ -111,59 +116,86 @@ function ProjectDetail() {
     return <div>Project not found</div>;
   }
 
-  return (
-    <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
-      <Header
-        backgroundHeader={ProfileBgImage}
-        name={project.name}
-        totalIssues={project.totalIssues}
-        openIssues={project.openIssues}
-        closedIssues={project.closedIssues}
-        layout="/manager"
-      />
-      <Grid templateColumns={{ sm: "1fr", xl: "1fr 2fr" }} gap="22px" mt="20px">
-        <Card>
-          <CardHeader>
-            <Heading as="h3" size="md">
-              Project Information
-            </Heading>
-          </CardHeader>
-          <CardBody pt="20px">
-            <Text fontSize="md" color={textColor}>
-              {project.description}
-            </Text>
-          </CardBody>
-        </Card>
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-        <Card>
-          <CardHeader>
-            <Heading as="h3" size="md">
-              Issues for this Project
-            </Heading>
-          </CardHeader>
-          <CardBody pt="20px">
-            <Table variant="simple" color={textColor}>
-              <Thead>
-                <Tr>
-                  <Th>Issue Name</Th>
-                  <Th>Status</Th>
-                  <Th>Details</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {project.issues.map((issue) => (
-                  <ProjectIssueRow
-                    key={issue.id}
-                    issue={issue}
-                    layout="/manager"
-                  />
-                ))}
-              </Tbody>
-            </Table>
-          </CardBody>
-        </Card>
-      </Grid>
-    </Flex>
+  const onOpenAddIssueModal = () => {
+    onOpen();
+  };
+
+  const handleAddIssue = (newIssue) => {
+    console.log("New Issue Added:", newIssue);
+    // In a real application, you would update your state or send this to a backend
+  };
+
+  return (
+    <>
+      <AddIssueModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onAddIssue={handleAddIssue}
+      />
+      <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+        <Header
+          backgroundHeader={ProfileBgImage}
+          name={project.name}
+          totalIssues={project.totalIssues}
+          openIssues={project.openIssues}
+          closedIssues={project.closedIssues}
+          layout="/tester"
+        />
+        <Grid
+          templateColumns={{ sm: "1fr", xl: "1fr 2fr" }}
+          gap="22px"
+          mt="20px"
+        >
+          <Card>
+            <CardHeader>
+              <Heading as="h3" size="md">
+                Project Information
+              </Heading>
+            </CardHeader>
+            <CardBody pt="20px">
+              <Text fontSize="md" color={textColor}>
+                {project.description}
+              </Text>
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <Flex justify="space-between" align="center">
+                <Heading as="h3" size="md">
+                  Issues for this Project
+                </Heading>
+                <Button colorScheme="blue" onClick={onOpenAddIssueModal}>
+                  Report New Issue
+                </Button>
+              </Flex>
+            </CardHeader>
+            <CardBody pt="20px">
+              <Table variant="simple" color={textColor}>
+                <Thead>
+                  <Tr>
+                    <Th>Issue Name</Th>
+                    <Th>Status</Th>
+                    <Th>Details</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {project.issues.map((issue) => (
+                    <ProjectIssueRow
+                      key={issue.id}
+                      issue={issue}
+                      layout="/tester"
+                    />
+                  ))}
+                </Tbody>
+              </Table>
+            </CardBody>
+          </Card>
+        </Grid>
+      </Flex>
+    </>
   );
 }
 

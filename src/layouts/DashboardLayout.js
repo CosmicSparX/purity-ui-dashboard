@@ -1,6 +1,7 @@
 import { ChakraProvider, Portal, useDisclosure } from "@chakra-ui/react";
 import Configurator from "components/Configurator/Configurator";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
+import AddIssueModal from "components/AddIssue/AddIssueModal";
 import Sidebar from "components/Sidebar";
 import React, { useState, useMemo } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -17,7 +18,13 @@ import PropTypes from "prop-types";
 
 export default function DashboardLayout(props) {
   const { layoutPrefix } = props;
+  const userRole = "tester"; // This will be dynamic based on logged-in user
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isAddIssueModalOpen,
+    onOpen: onOpenAddIssueModal,
+    onClose: onCloseAddIssueModal,
+  } = useDisclosure();
   const [sidebarVariant, setSidebarVariant] = useState("transparent");
   const [fixed, setFixed] = useState(false);
 
@@ -80,6 +87,8 @@ export default function DashboardLayout(props) {
         logoText={null}
         display="none"
         sidebarVariant={sidebarVariant}
+        onOpenAddIssueModal={onOpenAddIssueModal}
+        userRole={userRole}
       />
       <MainPanel
         w={{
@@ -148,6 +157,10 @@ export default function DashboardLayout(props) {
           onTransparent={() => setSidebarVariant("transparent")}
         />
       </MainPanel>
+      <AddIssueModal
+        isOpen={isAddIssueModalOpen}
+        onClose={onCloseAddIssueModal}
+      />
     </ChakraProvider>
   );
 }

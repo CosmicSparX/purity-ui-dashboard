@@ -10,14 +10,17 @@ import {
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import PropTypes from "prop-types";
 
+import { useHistory } from "react-router-dom";
+
 function Header({
   backgroundHeader,
   name,
   totalIssues,
   openIssues,
   closedIssues,
-  handleGoBack,
+  layout,
 }) {
+  const history = useHistory();
   const textColor = useColorModeValue("gray.700", "white");
   const bgProfile = useColorModeValue(
     "hsla(0,0%,100%,.8)",
@@ -50,7 +53,7 @@ function Header({
         justifyContent="center"
       >
         <Flex
-          onClick={handleGoBack}
+          onClick={() => history.push(`${layout}/projects`)}
           position="absolute"
           top="20px"
           left="20px"
@@ -174,7 +177,7 @@ Header.propTypes = {
   totalIssues: PropTypes.number.isRequired,
   openIssues: PropTypes.number.isRequired,
   closedIssues: PropTypes.number.isRequired,
-  handleGoBack: PropTypes.func.isRequired,
+  layout: PropTypes.string.isRequired,
 };
 
 export default Header;

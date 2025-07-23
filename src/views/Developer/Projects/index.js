@@ -60,6 +60,8 @@ const projectsData = [
 ];
 
 function Projects() {
+  const userRole = "developer"; // This will be dynamic based on logged-in user
+  const userId = "developer1"; // This will be dynamic based on logged-in user
   const textColor = useColorModeValue("gray.700", "white");
   const [searchTerm, setSearchTerm] = useState("");
   const [showCriticalOnly, setShowCriticalOnly] = useState(false);
@@ -80,7 +82,7 @@ function Projects() {
     }
 
     return tempProjects;
-  }, [searchTerm, showCriticalOnly]);
+  }, [searchTerm, showCriticalOnly, userRole, userId]);
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -127,7 +129,7 @@ function Projects() {
                 <ProjectRow
                   key={project.id}
                   project={project}
-                  layout="/manager"
+                  layout="/developer"
                 />
               ))}
             </Tbody>

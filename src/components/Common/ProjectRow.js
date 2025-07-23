@@ -3,11 +3,11 @@ import { Tr, Td, Button } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
-function ProjectRow({ project }) {
+function ProjectRow({ project, layout }) {
   const history = useHistory();
 
   const handleProjectClick = () => {
-    history.push(`/manager/projects/${project.id}`);
+    history.push(`${layout}/projects/${project.id}`);
   };
 
   return (
@@ -31,6 +31,7 @@ ProjectRow.propTypes = {
     closedIssues: PropTypes.number.isRequired,
     criticalOpenIssues: PropTypes.number.isRequired,
   }).isRequired,
+  layout: PropTypes.string.isRequired,
 };
 
 export default ProjectRow;
