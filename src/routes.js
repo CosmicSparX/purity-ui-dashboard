@@ -31,6 +31,7 @@ var dashRoutes = [
     icon: <HomeIcon color="inherit" />,
     component: Dashboard,
     layout: "/admin",
+    exact: true,
   },
   {
     path: "/users",
@@ -45,6 +46,7 @@ var dashRoutes = [
     icon: <HomeIcon color="inherit" />,
     component: ManagerDashboard,
     layout: "/manager",
+    exact: true,
   },
 
   {
