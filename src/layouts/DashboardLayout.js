@@ -28,6 +28,7 @@ export default function DashboardLayout(props) {
   const [sidebarVariant, setSidebarVariant] = useState("transparent");
   const [fixed, setFixed] = useState(false);
 
+  console.log("DashboardLayout - layoutPrefix:", layoutPrefix);
   // Create a single, definitive list of routes for the current user.
   // This is used for both the router and the sidebar to ensure consistency.
   const userRoutes = useMemo(() => {
@@ -62,16 +63,29 @@ export default function DashboardLayout(props) {
   };
 
   const getActiveRoute = () => {
-    const currentPath = window.location.href;
+    // Get the path after the hash, e.g., "/tester" or "/tester/projects"
+    const currentPath = window.location.hash.substring(1); // Remove the '#'
+    console.log("getActiveRoute - currentPath (from hash):", currentPath);
     // Search role-specific routes
     for (const route of userRoutes) {
-      if (route.path && currentPath.indexOf(route.layout + route.path) !== -1) {
+      // Construct the full route path including the layout prefix
+      const fullRoutePath = route.layout + route.path;
+      console.log(
+        "getActiveRoute - checking route:",
+        fullRoutePath,
+        "against currentPath:",
+        currentPath
+      );
+      if (route.path && currentPath.startsWith(fullRoutePath)) {
+        console.log("getActiveRoute - matched route:", route.name);
         return route.name;
       }
       // Search shared routes within categories
       if (route.category === "account") {
         for (const view of route.views) {
-          if (currentPath.indexOf(view.path) !== -1) {
+          // For account pages, the path is relative to the root, so we just check view.path
+          if (currentPath.startsWith(view.layout + view.path)) {
+            console.log("getActiveRoute - matched account view:", view.name);
             return view.name;
           }
         }
@@ -109,6 +123,20 @@ export default function DashboardLayout(props) {
           <PanelContent>
             <PanelContainer>
               <Switch>
+                {layoutPrefix === "/developer" || layoutPrefix === "/tester" ? (
+                  <>
+                    <Redirect
+                      from={layoutPrefix + "/dashboard"}
+                      to={layoutPrefix + "/projects"}
+                    />
+                    <Redirect
+                      from={layoutPrefix}
+                      to={layoutPrefix + "/projects"}
+                      exact
+                    />
+                  </>
+                ) : null}
+
                 {
                   // Render routes for the user's role
                   userRoutes.map((prop, key) => {
@@ -133,11 +161,6 @@ export default function DashboardLayout(props) {
                     }
                   })
                 }
-                <Redirect
-                  exact
-                  from={layoutPrefix}
-                  to={`${layoutPrefix}/dashboard`}
-                />
               </Switch>
             </PanelContainer>
           </PanelContent>

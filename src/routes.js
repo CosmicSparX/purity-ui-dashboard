@@ -11,12 +11,11 @@ import TesterProjects from "views/Tester/Projects";
 import TesterIssues from "views/Tester/Issues";
 import TesterProjectDetail from "views/Tester/ProjectDetail";
 import TesterIssueDetail from "views/Tester/IssueDetail";
-import DeveloperDashboard from "views/Developer/DeveloperDashboard";
+
 import DeveloperProjects from "views/Developer/Projects";
 import DeveloperIssues from "views/Developer/Issues";
 import DeveloperProjectDetail from "views/Developer/ProjectDetail";
 import DeveloperIssueDetail from "views/Developer/IssueDetail";
-import TesterDashboard from "views/Tester/TesterDashboard";
 
 import {
   HomeIcon,
@@ -47,6 +46,7 @@ var dashRoutes = [
     component: ManagerDashboard,
     layout: "/manager",
   },
+
   {
     path: "/projects/:projectId",
     name: "Project Detail",
@@ -77,6 +77,7 @@ var dashRoutes = [
     layout: "/manager",
     exact: true,
   },
+
   {
     path: "/projects/:projectId",
     name: "Tester Project Detail",
@@ -107,20 +108,7 @@ var dashRoutes = [
     layout: "/tester",
     exact: true,
   },
-  {
-    path: "/dashboard",
-    name: "Developer Dashboard",
-    icon: <HomeIcon color="inherit" />,
-    component: DeveloperDashboard,
-    layout: "/developer",
-  },
-  {
-    path: "/dashboard",
-    name: "Tester Dashboard",
-    icon: <HomeIcon color="inherit" />,
-    component: TesterDashboard,
-    layout: "/tester",
-  },
+
   {
     path: "/projects/:projectId",
     name: "Developer Project Detail",

@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
+  Flex, // Added for layout
+  Tag, // Added for document display
+  TagLabel, // Added for document display
+  TagCloseButton, // Added for document removal
+  Tooltip, // Added for hover effect
+  IconButton, // Import IconButton
   Modal,
   ModalOverlay,
   ModalContent,
@@ -17,14 +23,18 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-function AddIssueModal({ isOpen, onClose, onAddIssue }) {
+import { FiPlus } from "react-icons/fi";
+import { FaFilePdf, FaFileImage, FaFileAlt } from "react-icons/fa"; // Import file type icons
+
+function AddIssueModal({ isOpen, onClose, onAddIssue, defaultProjectId }) {
   const [issueName, setIssueName] = useState("");
   const [description, setDescription] = useState("");
-  const [project, setProject] = useState("");
-  const [status, setStatus] = useState("Open");
+  const [project, setProject] = useState(defaultProjectId || "");
+  const [status] = useState("Open");
   const [priority, setPriority] = useState("Medium");
-  const [type, setType] = useState("Bug");
-  const [assignedTo, setAssignedTo] = useState("");
+  const [expectedBehavior, setExpectedBehavior] = useState("");
+  const [actualBehavior, setActualBehavior] = useState("");
+  const [attachedDocuments, setAttachedDocuments] = useState([]); // Change to array for multiple files
   const toast = useToast();
 
   const handleSubmit = () => {
@@ -47,8 +57,9 @@ function AddIssueModal({ isOpen, onClose, onAddIssue }) {
       project,
       status,
       priority,
-      type,
-      assignedTo,
+      expectedBehavior,
+      actualBehavior,
+      attachedDocuments: attachedDocuments.map((file) => file.name), // Store file names for demonstration
       comments: [],
     };
 
@@ -65,10 +76,16 @@ function AddIssueModal({ isOpen, onClose, onAddIssue }) {
     setIssueName("");
     setDescription("");
     setProject("");
-    setStatus("Open");
     setPriority("Medium");
-    setType("Bug");
-    setAssignedTo("");
+    setExpectedBehavior("");
+    setActualBehavior("");
+    setAttachedDocuments([]);
+  };
+
+  const handleRemoveDocument = (indexToRemove) => {
+    setAttachedDocuments(
+      attachedDocuments.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   return (
@@ -98,23 +115,15 @@ function AddIssueModal({ isOpen, onClose, onAddIssue }) {
 
           <FormControl mb={4} isRequired>
             <FormLabel>Project</FormLabel>
-            <Input
-              placeholder="Enter project name"
+            <Input // Changed to Project ID
+              placeholder="Enter project ID"
               value={project}
-              onChange={(e) => setProject(e.target.value)}
+              onChange={(e) => setProject(e.target.value)} // Allow manual entry if no default
+              isReadOnly={!!defaultProjectId} // Make read-only if defaultProjectId is provided
             />
           </FormControl>
 
-          <FormControl mb={4}>
-            <FormLabel>Status</FormLabel>
-            <Select value={status} onChange={(e) => setStatus(e.target.value)}>
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Closed">Closed</option>
-            </Select>
-          </FormControl>
-
-          <FormControl mb={4}>
+          <FormControl mb={4} isRequired>
             <FormLabel>Priority</FormLabel>
             <Select
               value={priority}
@@ -126,23 +135,78 @@ function AddIssueModal({ isOpen, onClose, onAddIssue }) {
             </Select>
           </FormControl>
 
-          <FormControl mb={4}>
-            <FormLabel>Type</FormLabel>
-            <Select value={type} onChange={(e) => setType(e.target.value)}>
-              <option value="Bug">Bug</option>
-              <option value="Feature">Feature</option>
-              <option value="Improvement">Improvement</option>
-              <option value="Performance">Performance</option>
-            </Select>
+          <FormControl mb={4} isRequired>
+            <FormLabel>Expected Behavior</FormLabel>
+            <Textarea
+              placeholder="Describe the expected behavior"
+              value={expectedBehavior}
+              onChange={(e) => setExpectedBehavior(e.target.value)}
+            />
+          </FormControl>
+
+          <FormControl mb={4} isRequired>
+            <FormLabel>Actual Behavior</FormLabel>
+            <Textarea
+              placeholder="Describe the actual behavior"
+              value={actualBehavior}
+              onChange={(e) => setActualBehavior(e.target.value)}
+            />
           </FormControl>
 
           <FormControl mb={4}>
-            <FormLabel>Assigned To</FormLabel>
-            <Input
-              placeholder="Enter assigned developer (optional)"
-              value={assignedTo}
-              onChange={(e) => setAssignedTo(e.target.value)}
-            />
+            <FormLabel>Attach Documents</FormLabel>
+            <Flex alignItems="center" wrap="wrap">
+              {attachedDocuments.map((file, index) => {
+                let fileIcon = <FaFileAlt />;
+                if (file.type.includes("image")) {
+                  fileIcon = <FaFileImage />;
+                } else if (file.type.includes("pdf")) {
+                  fileIcon = <FaFilePdf />;
+                }
+                return (
+                  <Tooltip label={file.name} key={index}>
+                    <Tag
+                      size="lg"
+                      borderRadius="full"
+                      variant="solid"
+                      colorScheme="gray"
+                      mr={2}
+                      mb={2}
+                    >
+                      {fileIcon}
+                      <TagLabel ml={1}>
+                        {file.name.substring(0, 15)}...
+                      </TagLabel>
+                      <TagCloseButton
+                        onClick={() => handleRemoveDocument(index)}
+                      />
+                    </Tag>
+                  </Tooltip>
+                );
+              })}
+              <input
+                type="file"
+                multiple
+                hidden
+                id="file-upload"
+                onChange={(e) =>
+                  setAttachedDocuments([
+                    ...attachedDocuments,
+                    ...Array.from(e.target.files),
+                  ])
+                }
+              />
+              <label htmlFor="file-upload">
+                <IconButton
+                  as="span"
+                  icon={<FiPlus />}
+                  aria-label="Attach Document"
+                  colorScheme="gray"
+                  variant="outline"
+                  cursor="pointer"
+                />
+              </label>
+            </Flex>
           </FormControl>
         </ModalBody>
 
@@ -165,4 +229,5 @@ AddIssueModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onAddIssue: PropTypes.func.isRequired,
+  defaultProjectId: PropTypes.string, // New prop for default project ID
 };

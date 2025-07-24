@@ -134,6 +134,7 @@ function ProjectDetail() {
         isOpen={isOpen}
         onClose={onClose}
         onAddIssue={handleAddIssue}
+        defaultProjectId={projectId} // Pass the current projectId
       />
       <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
         <Header
@@ -163,15 +164,19 @@ function ProjectDetail() {
           </Card>
 
           <Card>
-            <CardHeader>
-              <Flex justify="space-between" align="center">
-                <Heading as="h3" size="md">
-                  Issues for this Project
-                </Heading>
-                <Button colorScheme="blue" onClick={onOpenAddIssueModal}>
-                  Report New Issue
-                </Button>
-              </Flex>
+            <CardHeader p="6">
+              <Heading as="h3" size="md">
+                Issues for this Project
+              </Heading>
+              <Button
+                colorScheme="blue"
+                onClick={onOpenAddIssueModal}
+                position="absolute"
+                top="22px" // Adjust as needed for vertical alignment
+                right="22px" // Adjust as needed for horizontal alignment
+              >
+                Report New Issue
+              </Button>
             </CardHeader>
             <CardBody pt="20px">
               <Table variant="simple" color={textColor}>

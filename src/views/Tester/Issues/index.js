@@ -17,6 +17,9 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import IssueRow from "components/Common/IssueRow";
 
+import { useDisclosure, Button } from "@chakra-ui/react";
+import AddIssueModal from "components/AddIssue/AddIssueModal";
+
 const issuesData = [
   {
     id: 1,
@@ -73,6 +76,17 @@ function Issues() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [showCriticalOnly, setShowCriticalOnly] = useState(false);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const onOpenAddIssueModal = () => {
+    onOpen();
+  };
+
+  const handleAddIssue = (newIssue) => {
+    console.log("New Issue Added:", newIssue);
+    // In a real application, you would update your state or send this to a backend
+  };
+
   const filteredIssues = useMemo(() => {
     let tempIssues = issuesData;
 
@@ -102,65 +116,77 @@ function Issues() {
   }, [searchTerm, statusFilter, showCriticalOnly, userRole, userId]);
 
   return (
-    <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
-        <CardHeader p="6px 0px 22px 0px">
-          <Flex direction="column">
-            <Text fontSize="xl" color={textColor} fontWeight="bold" mb="10px">
-              Issues
-            </Text>
-            <Flex mb="20px" wrap="wrap" alignItems="center">
-              <Input
-                placeholder="Search issues..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                width={{ base: "100%", md: "250px" }}
-                mr={{ base: "0", md: "20px" }}
-                mb={{ base: "10px", md: "0" }}
-              />
-              <Select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                width={{ base: "100%", md: "150px" }}
-                mr={{ base: "0", md: "20px" }}
-                mb={{ base: "10px", md: "0" }}
-              >
-                <option value="All">All Statuses</option>
-                <option value="Open">Open</option>
-                <option value="Closed">Closed</option>
-                <option value="In Progress">In Progress</option>
-              </Select>
-              <Checkbox
-                isChecked={showCriticalOnly}
-                onChange={(e) => setShowCriticalOnly(e.target.checked)}
-                colorScheme="red"
-              >
-                Show Critical Only (High Priority)
-              </Checkbox>
+    <>
+      <AddIssueModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onAddIssue={handleAddIssue}
+      />
+      <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
+        <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+          <CardHeader p="6px 0px 22px 0px">
+            <Flex direction="column" width="100%">
+              <Flex justify="space-between" align="center" mb="10px">
+                <Text fontSize="xl" color={textColor} fontWeight="bold">
+                  Issues
+                </Text>
+                <Button colorScheme="blue" onClick={onOpenAddIssueModal}>
+                  Report New Issue
+                </Button>
+              </Flex>
+              <Flex mb="20px" wrap="wrap" alignItems="center">
+                <Input
+                  placeholder="Search issues..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  width={{ base: "100%", md: "250px" }}
+                  mr={{ base: "0", md: "20px" }}
+                  mb={{ base: "10px", md: "0" }}
+                />
+                <Select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  width={{ base: "100%", md: "150px" }}
+                  mr={{ base: "0", md: "20px" }}
+                  mb={{ base: "10px", md: "0" }}
+                >
+                  <option value="All">All Statuses</option>
+                  <option value="Open">Open</option>
+                  <option value="Closed">Closed</option>
+                  <option value="In Progress">In Progress</option>
+                </Select>
+                <Checkbox
+                  isChecked={showCriticalOnly}
+                  onChange={(e) => setShowCriticalOnly(e.target.checked)}
+                  colorScheme="red"
+                >
+                  Show Critical Only (High Priority)
+                </Checkbox>
+              </Flex>
             </Flex>
-          </Flex>
-        </CardHeader>
-        <CardBody>
-          <Table variant="simple" color={textColor}>
-            <Thead>
-              <Tr my=".8rem" ps="0px">
-                <Th color="gray.400" ps="0px">
-                  Issue Name
-                </Th>
-                <Th color="gray.400">Project</Th>
-                <Th color="gray.400">Status</Th>
-                <Th color="gray.400"></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {filteredIssues.map((issue) => (
-                <IssueRow key={issue.id} issue={issue} layout="/tester" />
-              ))}
-            </Tbody>
-          </Table>
-        </CardBody>
-      </Card>
-    </Flex>
+          </CardHeader>
+          <CardBody>
+            <Table variant="simple" color={textColor}>
+              <Thead>
+                <Tr my=".8rem" ps="0px">
+                  <Th color="gray.400" ps="0px">
+                    Issue Name
+                  </Th>
+                  <Th color="gray.400">Project</Th>
+                  <Th color="gray.400">Status</Th>
+                  <Th color="gray.400"></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {filteredIssues.map((issue) => (
+                  <IssueRow key={issue.id} issue={issue} layout="/tester" />
+                ))}
+              </Tbody>
+            </Table>
+          </CardBody>
+        </Card>
+      </Flex>
+    </>
   );
 }
 

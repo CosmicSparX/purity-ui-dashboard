@@ -9,6 +9,7 @@ import Comments from "components/Common/IssueDetailComponents/Comments";
 import IssueInfo from "components/Common/IssueDetailComponents/IssueInfo";
 import AssignedToSection from "components/Common/IssueDetailComponents/AssignedToSection";
 import IssueHeader from "components/Common/IssueDetailComponents/IssueHeader";
+import AttachedDocumentsSection from "components/Common/IssueDetailComponents/AttachedDocumentsSection";
 
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 
@@ -70,19 +71,31 @@ function IssueDetail() {
       />
 
       <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="22px">
-        <IssueInfo
-          description={issue.description}
-          attachedDocuments={issue.attachedDocuments}
-        />
         <Flex direction="column" gap="22px">
-          <AssignedToSection
-            assignedTo={issue.assignedTo}
-            status={issue.status}
-            onAssignClick={handleAssignClick}
-            onDeveloperSelect={handleDeveloperSelect}
-            developers={developers}
-            selectedDeveloper={selectedDeveloper}
-          />
+          <Grid templateColumns={{ sm: "1fr", md: "1fr 1fr" }} gap="22px">
+            <IssueInfo description={issue.description} />
+            <AttachedDocumentsSection
+              attachedDocuments={issue.attachedDocuments}
+            />
+          </Grid>
+          <Card>
+            <CardHeader
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Text fontSize="lg" fontWeight="bold">
+                Implementation Plan
+              </Text>
+            </CardHeader>
+            <CardBody pt="20px">
+              <Text fontSize="md" mb="10px">
+                {issue.implementationPlan || "No implementation plan yet."}
+              </Text>
+            </CardBody>
+          </Card>
+        </Flex>
+        <Flex direction="column" gap="22px">
           <Card>
             <CardHeader>
               <Text fontSize="lg" fontWeight="bold">
@@ -93,6 +106,14 @@ function IssueDetail() {
               <Text fontSize="md">{issue.reportedBy}</Text>
             </CardBody>
           </Card>
+          <AssignedToSection
+            assignedTo={issue.assignedTo}
+            status={issue.status}
+            onAssignClick={handleAssignClick}
+            onDeveloperSelect={handleDeveloperSelect}
+            developers={developers}
+            selectedDeveloper={selectedDeveloper}
+          />
           <Comments
             comments={issue.comments}
             newComment={newComment}

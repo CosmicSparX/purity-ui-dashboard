@@ -5,10 +5,11 @@ import Card from "components/Card/Card";
 import CardHeader from "components/Card/CardHeader";
 import CardBody from "components/Card/CardBody";
 
-import Comments from "components/Common/IssueDetailComponents/Comments";
 import IssueInfo from "components/Common/IssueDetailComponents/IssueInfo";
 import AssignedToSection from "components/Common/IssueDetailComponents/AssignedToSection";
 import IssueHeader from "components/Common/IssueDetailComponents/IssueHeader";
+import AttachedDocumentsSection from "components/Common/IssueDetailComponents/AttachedDocumentsSection";
+import Comments from "components/Common/IssueDetailComponents/Comments";
 
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 
@@ -69,10 +70,30 @@ function IssueDetail() {
       />
 
       <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="22px">
-        <IssueInfo
-          description={issue.description}
-          attachedDocuments={issue.attachedDocuments}
-        />
+        <Flex direction="column" gap="22px">
+          <Grid templateColumns={{ sm: "1fr", md: "1fr 1fr" }} gap="22px">
+            <IssueInfo description={issue.description} />
+            <AttachedDocumentsSection
+              attachedDocuments={issue.attachedDocuments}
+            />
+          </Grid>
+          <Card>
+            <CardHeader
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Text fontSize="lg" fontWeight="bold">
+                Implementation Plan
+              </Text>
+            </CardHeader>
+            <CardBody pt="20px">
+              <Text fontSize="md" mb="10px">
+                {issue.implementationPlan || "No implementation plan yet."}
+              </Text>
+            </CardBody>
+          </Card>
+        </Flex>
         <Flex direction="column" gap="22px">
           <Card>
             <CardHeader>

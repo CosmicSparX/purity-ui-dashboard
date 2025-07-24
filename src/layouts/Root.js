@@ -62,6 +62,7 @@ export default function Root() {
   console.log(userRole);
   // If user is logged in, set up the main layout and redirects
   const userLayoutPath = getLayoutForRole(userRole);
+  console.log("Root.js - userLayoutPath:", userLayoutPath);
 
   return (
     <>
@@ -90,7 +91,7 @@ export default function Root() {
             <DashboardLayout {...props} layoutPrefix={userLayoutPath} />
           )}
         />
-        <Redirect from="/" to={userLayoutPath} />
+        <Redirect from="/" to={`${userLayoutPath}/projects`} />
       </Switch>
     </>
   );
