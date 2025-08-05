@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Flex,
   Table,
@@ -10,62 +10,47 @@ import {
   Input,
   Checkbox,
   Text,
+  Spinner,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import ProjectRow from "components/Common/ProjectRow";
-
-const projectsData = [
-  {
-    id: 1,
-    name: "Project Alpha",
-    openIssues: 10,
-    closedIssues: 50,
-    criticalOpenIssues: 2,
-    assignedTo: ["manager", "developer1", "tester1"],
-  },
-  {
-    id: 2,
-    name: "Project Beta",
-    openIssues: 5,
-    closedIssues: 25,
-    criticalOpenIssues: 1,
-    assignedTo: ["manager", "developer2", "tester2"],
-  },
-  {
-    id: 3,
-    name: "Project Gamma",
-    openIssues: 2,
-    closedIssues: 100,
-    criticalOpenIssues: 0,
-    assignedTo: ["manager", "developer1", "tester1"],
-  },
-  {
-    id: 4,
-    name: "Project Delta",
-    openIssues: 15,
-    closedIssues: 30,
-    criticalOpenIssues: 3,
-    assignedTo: ["manager", "developer2", "tester2"],
-  },
-  {
-    id: 5,
-    name: "Project Epsilon",
-    openIssues: 0,
-    closedIssues: 70,
-    criticalOpenIssues: 0,
-    assignedTo: ["manager", "developer1", "tester1"],
-  },
-];
+import { getProjects } from "../../../services/issueApi";
 
 function Projects() {
   const textColor = useColorModeValue("gray.700", "white");
   const [searchTerm, setSearchTerm] = useState("");
   const [showCriticalOnly, setShowCriticalOnly] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await getProjects();
+        setProjects(
+          Array.isArray(response.data.projects)
+            ? response.data.projects.map((project) => ({
+                ...project,
+                id: project.ID,
+              }))
+            : []
+        );
+      } catch (error) {
+        setError("Error fetching projects. Please try again later.");
+      }
+      setLoading(false);
+    };
+
+    fetchProjects();
+  }, []);
 
   const filteredProjects = useMemo(() => {
-    let tempProjects = projectsData;
+    let tempProjects = projects;
 
     if (searchTerm) {
       tempProjects = tempProjects.filter((project) =>
@@ -80,7 +65,20 @@ function Projects() {
     }
 
     return tempProjects;
-  }, [searchTerm, showCriticalOnly]);
+  }, [searchTerm, showCriticalOnly, projects]);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <Alert status="error" mt="100px">
+        <AlertIcon />
+        {error}
+      </Alert>
+    );
+  }
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>

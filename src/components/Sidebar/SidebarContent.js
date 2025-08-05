@@ -10,8 +10,6 @@ import { FiPlus } from "react-icons/fi";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-// this function creates the links and collapses that appear in the sidebar (left menu)
-
 
 const SidebarContent = ({ logoText, routes }) => {
 
@@ -105,9 +103,6 @@ const SidebarContent = ({ logoText, routes }) => {
               }}
             >
               <Flex>
-                {typeof prop.icon === "string" ? (
-                  <Icon>{prop.icon}</Icon>
-                ) : (
                   <IconBox
                     bg="teal.300"
                     color="white"
@@ -115,9 +110,8 @@ const SidebarContent = ({ logoText, routes }) => {
                     w="30px"
                     me="12px"
                   >
-                    {prop.icon}
+                    {prop.icon ? (typeof prop.icon === "string" ? <Icon>{prop.icon}</Icon> : prop.icon) : null}
                   </IconBox>
-                )}
                 <Text color={activeColor} my="auto" fontSize="sm">
                   {document.documentElement.dir === "rtl"
                     ? prop.rtlName
@@ -155,9 +149,6 @@ const SidebarContent = ({ logoText, routes }) => {
               }}
             >
               <Flex>
-                {typeof prop.icon === "string" ? (
-                  <Icon>{prop.icon}</Icon>
-                ) : (
                   <IconBox
                     bg={inactiveBg}
                     color="teal.300"
@@ -165,9 +156,8 @@ const SidebarContent = ({ logoText, routes }) => {
                     w="30px"
                     me="12px"
                   >
-                    {prop.icon}
+                    {prop.icon ? (typeof prop.icon === "string" ? <Icon>{prop.icon}</Icon> : prop.icon) : null}
                   </IconBox>
-                )}
                 <Text color={inactiveColor} my="auto" fontSize="sm">
                   {document.documentElement.dir === "rtl"
                     ? prop.rtlName
@@ -225,7 +215,6 @@ const SidebarContent = ({ logoText, routes }) => {
                 }}
                 borderRadius="15px"
                 _hover="none"
-                w="100%"
                 _active={{
                   bg: "inherit",
                   transform: "none",

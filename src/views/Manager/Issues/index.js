@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Flex,
   Table,
@@ -11,68 +11,48 @@ import {
   Select,
   Checkbox,
   Text,
+  Spinner,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import IssueRow from "components/Common/IssueRow";
-
-const issuesData = [
-  {
-    id: 1,
-    name: "Issue A: Bug in login module",
-    project: "Project Alpha",
-    status: "Open",
-    priority: "High",
-    assignedTo: "developer1",
-    reportedBy: "tester1",
-  },
-  {
-    id: 2,
-    name: "Issue B: Database connection error",
-    project: "Project Beta",
-    status: "Closed",
-    priority: "Medium",
-    assignedTo: "developer2",
-    reportedBy: "tester2",
-  },
-  {
-    id: 3,
-    name: "Issue C: Performance degradation on dashboard",
-    project: "Project Alpha",
-    status: "In Progress",
-    priority: "High",
-    assignedTo: "developer1",
-    reportedBy: "tester1",
-  },
-  {
-    id: 4,
-    name: "Issue D: UI alignment issue",
-    project: "Project Gamma",
-    status: "Open",
-    priority: "Low",
-    assignedTo: "developer1",
-    reportedBy: "tester1",
-  },
-  {
-    id: 5,
-    name: "Issue E: API response time slow",
-    project: "Project Beta",
-    status: "Open",
-    priority: "High",
-    assignedTo: "developer2",
-    reportedBy: "tester2",
-  },
-];
+import { getIssues } from "../../../services/issueApi";
 
 function Issues() {
   const textColor = useColorModeValue("gray.700", "white");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [showCriticalOnly, setShowCriticalOnly] = useState(false);
+  const [issues, setIssues] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
+        const response = await getIssues();
+        setIssues(
+          Array.isArray(response.data.issues)
+            ? response.data.issues.map((issue) => ({
+                ...issue,
+                id: issue.ID,
+              }))
+            : []
+        );
+      } catch (error) {
+        setError("Error fetching issues. Please try again later.");
+      }
+      setLoading(false);
+    };
+
+    fetchIssues();
+  }, []);
 
   const filteredIssues = useMemo(() => {
-    let tempIssues = issuesData;
+    let tempIssues = issues;
 
     if (searchTerm) {
       tempIssues = tempIssues.filter(
@@ -91,7 +71,20 @@ function Issues() {
     }
 
     return tempIssues;
-  }, [searchTerm, statusFilter, showCriticalOnly]);
+  }, [searchTerm, statusFilter, showCriticalOnly, issues]);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <Alert status="error" mt="100px">
+        <AlertIcon />
+        {error}
+      </Alert>
+    );
+  }
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>

@@ -18,5 +18,5 @@ export default function IconBox(props) {
 }
 
 IconBox.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };

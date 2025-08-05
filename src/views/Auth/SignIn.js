@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "contexts/AuthContext";
+import authApi from "../../services/authApi";
 // Chakra imports
 import {
   Flex,
@@ -60,24 +61,19 @@ function SignIn() {
     let requestBody = {};
 
     if (isEmail) {
-      loginEndpoint = "/api/auth/login";
+      loginEndpoint = "/api/user/auth/login";
+      requestBody = { email: identifier, password: password };
     } else {
-      loginEndpoint = "/api/auth/login";
+      loginEndpoint = "/api/user/auth/login";
       requestBody = { username: identifier, password: password };
     }
 
     try {
-      const response = await fetch(loginEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await authApi.post(loginEndpoint, requestBody);
 
-      const data = await response.json();
+      const data = response.data;
 
-      if (response.ok) {
+      if (response.status === 200) {
         const userRole = login(data.access_token); // Use the login function from AuthContext
 
         // Redirect based on role

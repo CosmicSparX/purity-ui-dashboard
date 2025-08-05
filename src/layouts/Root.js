@@ -9,10 +9,16 @@ export default function Root() {
   const { userRole, verifyAndRefreshTokens, loading: authLoading } = useAuth(); // Use authLoading to avoid name collision
 
   useEffect(() => {
+    let isMounted = true;
     const checkAuth = async () => {
       await verifyAndRefreshTokens();
+      // Only update state if the component is still mounted
+      if (!isMounted) return;
     };
     checkAuth();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const getLayoutForRole = (role) => {

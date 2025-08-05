@@ -131,7 +131,6 @@ var dashRoutes = [
     icon: <DocumentIcon color="inherit" />,
     component: DeveloperProjects,
     layout: "/developer",
-    exact: true,
   },
   {
     path: "/issues",
@@ -139,7 +138,6 @@ var dashRoutes = [
     icon: <HelpIcon color="inherit" />,
     component: DeveloperIssues,
     layout: "/developer",
-    exact: true,
   },
   {
     path: "/dashboard",

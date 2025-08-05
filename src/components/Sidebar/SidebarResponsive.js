@@ -103,19 +103,15 @@ function SidebarResponsive(props) {
                 }}
               >
                 <Flex>
-                  {typeof prop.icon === "string" ? (
-                    <Icon>{prop.icon}</Icon>
-                  ) : (
-                    <IconBox
-                      bg="teal.300"
-                      color="white"
-                      h="30px"
-                      w="30px"
-                      me="12px"
-                    >
-                      {prop.icon}
-                    </IconBox>
-                  )}
+                  <IconBox
+                    bg="teal.300"
+                    color="white"
+                    h="30px"
+                    w="30px"
+                    me="12px"
+                  >
+                    {prop.icon ? (typeof prop.icon === "string" ? <Icon>{prop.icon}</Icon> : prop.icon) : null}
+                  </IconBox>
                   <Text color={activeColor} my="auto" fontSize="sm">
                     {document.documentElement.dir === "rtl"
                       ? prop.rtlName
@@ -153,19 +149,15 @@ function SidebarResponsive(props) {
                 }}
               >
                 <Flex>
-                  {typeof prop.icon === "string" ? (
-                    <Icon>{prop.icon}</Icon>
-                  ) : (
-                    <IconBox
-                      bg={inactiveBg}
-                      color="teal.300"
-                      h="30px"
-                      w="30px"
-                      me="12px"
-                    >
-                      {prop.icon}
-                    </IconBox>
-                  )}
+                  <IconBox
+                    bg={inactiveBg}
+                    color="teal.300"
+                    h="30px"
+                    w="30px"
+                    me="12px"
+                  >
+                    {prop.icon ? (typeof prop.icon === "string" ? <Icon>{prop.icon}</Icon> : prop.icon) : null}
+                  </IconBox>
                   <Text color={inactiveColor} my="auto" fontSize="sm">
                     {document.documentElement.dir === "rtl"
                       ? prop.rtlName
@@ -225,7 +217,7 @@ function SidebarResponsive(props) {
           w="18px"
           h="18px"
           ref={btnRef}
-          colorScheme="teal"
+          
           onClick={onOpen}
         />
         <Drawer

@@ -172,6 +172,9 @@ export default function DashboardLayout(props) {
       <AddIssueModal
         isOpen={isAddIssueModalOpen}
         onClose={onCloseAddIssueModal}
+        onAddIssue={(newIssue) =>
+          console.log("Issue added from DashboardLayout:", newIssue)
+        }
       />
     </ChakraProvider>
   );

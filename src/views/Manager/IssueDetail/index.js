@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import { Flex, Grid, Text } from "@chakra-ui/react";
+import { Flex, Grid, Text, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
 
 import Comments from "components/Common/IssueDetailComponents/Comments";
 import IssueInfo from "components/Common/IssueDetailComponents/IssueInfo";
@@ -13,16 +13,53 @@ import AttachedDocumentsSection from "components/Common/IssueDetailComponents/At
 
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 
-import { issuesData, developers } from "variables/issuesData";
+import { getIssueById, assignIssue } from "../../../services/issueApi";
+import { developers } from "variables/issuesData"; // Mock data for now
 
 function IssueDetail() {
   let { issueId } = useParams();
 
-  const [issue, setIssue] = useState(issuesData[issueId]);
+  const [issue, setIssue] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState("");
   const [selectedDeveloper, setSelectedDeveloper] = useState("");
 
   const history = useHistory();
+
+  useEffect(() => {
+    const fetchIssue = async () => {
+      try {
+        const response = await getIssueById(issueId);
+        setIssue({
+          ...response.data.issue,
+          attachedDocuments: Array.isArray(
+            response.data.issue.attachedDocuments
+          )
+            ? response.data.issue.attachedDocuments
+            : [],
+        });
+      } catch (error) {
+        setError("Error fetching issue details. Please try again later.");
+      }
+      setLoading(false);
+    };
+
+    fetchIssue();
+  }, [issueId]);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <Alert status="error" mt="100px">
+        <AlertIcon />
+        {error}
+      </Alert>
+    );
+  }
 
   if (!issue) {
     return <div>Issue not found</div>;
@@ -42,15 +79,19 @@ function IssueDetail() {
     setSelectedDeveloper(event.target.value);
   };
 
-  const handleAssignClick = () => {
+  const handleAssignClick = async () => {
     if (selectedDeveloper) {
-      setIssue((prevIssue) => ({
-        ...prevIssue,
-        assignedTo: selectedDeveloper,
-        status: "In Progress",
-      }));
-      setSelectedDeveloper("");
-      console.log(`Issue ${issue.name} assigned to ${selectedDeveloper}`);
+      try {
+        await assignIssue(issue.id, selectedDeveloper);
+        setIssue((prevIssue) => ({
+          ...prevIssue,
+          assignedTo: selectedDeveloper,
+          status: "In Progress",
+        }));
+        setSelectedDeveloper("");
+      } catch (error) {
+        setError("Error assigning issue. Please try again later.");
+      }
     }
   };
 

@@ -8,6 +8,7 @@ import React, {
 import { useHistory } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import PropTypes from "prop-types";
+import authApi, { setAuthToken } from "../services/authApi";
 
 const AuthContext = createContext(null);
 
@@ -40,6 +41,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (token) => {
     setAccessToken(token);
+    setAuthToken(token);
     const { role, id } = decodeToken(token);
     localStorage.setItem("userRole", role);
     setUserRole(role);
@@ -51,17 +53,12 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(async () => {
     setLoading(true);
     try {
-      await fetch(`/api/auth/logout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await authApi.post(`/api/user/auth/logout`);
     } catch (error) {
       console.error("Error logging out on the server:", error);
     } finally {
       setAccessToken(null);
+      setAuthToken(null);
       localStorage.removeItem("userRole");
       setUserRole(null);
       localStorage.removeItem("userID");
@@ -69,28 +66,18 @@ export const AuthProvider = ({ children }) => {
       history.push("/auth/signin");
       setLoading(false);
     }
-  }, [accessToken, history]);
+  }, [history]);
 
   const verifyAndRefreshTokens = useCallback(async () => {
     if (isRefreshing.current) {
       return refreshPromise.current;
     }
 
-    let currentAccessToken = accessToken;
-
-    if (currentAccessToken) {
+    if (accessToken) {
       try {
-        const verifyResponse = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/auth/verify`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${currentAccessToken}`,
-            },
-          }
-        );
-        if (verifyResponse.ok) {
-          return currentAccessToken;
+        const verifyResponse = await authApi.get(`/api/users/auth/verify`);
+        if (verifyResponse.status === 200) {
+          return accessToken;
         }
       } catch (error) {
         console.error("Error verifying access token:", error);
@@ -106,18 +93,16 @@ export const AuthProvider = ({ children }) => {
     refreshPromise.current = (async () => {
       try {
         setLoading(true);
-        const refreshResponse = await fetch("/api/auth/refresh", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ user_id: userID }),
-          credentials: "include",
-        });
+        const refreshResponse = await authApi.post(
+          "/api/user/auth/refresh",
+          { user_id: userID },
+          { headers: { Authorization: undefined } }
+        );
 
-        if (refreshResponse.ok) {
-          const data = await refreshResponse.json();
+        if (refreshResponse.status === 200) {
+          const data = refreshResponse.data;
           setAccessToken(data.access_token);
+          setAuthToken(data.access_token);
           const { role, id } = decodeToken(data.access_token);
           localStorage.setItem("userRole", role);
           setUserRole(role);

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Flex, Grid, Text } from "@chakra-ui/react";
+import { Flex, Grid, Text, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
 import Card from "components/Card/Card";
 import CardHeader from "components/Card/CardHeader";
 import CardBody from "components/Card/CardBody";
@@ -13,15 +13,52 @@ import Comments from "components/Common/IssueDetailComponents/Comments";
 
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 
-import { issuesData, developers } from "variables/issuesData";
+import { getIssueById } from "../../../services/issueApi";
+import { developers } from "variables/issuesData"; // Mock data for now
 
 function IssueDetail() {
   let { issueId } = useParams();
-  const [issue, setIssue] = useState(issuesData[issueId]);
+  const [issue, setIssue] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState("");
   const [selectedDeveloper, setSelectedDeveloper] = useState("");
 
   const history = useHistory();
+
+  useEffect(() => {
+    const fetchIssue = async () => {
+      try {
+        const response = await getIssueById(issueId);
+        setIssue({
+          ...response.data.issue,
+          attachedDocuments: Array.isArray(
+            response.data.issue.attachedDocuments
+          )
+            ? response.data.issue.attachedDocuments
+            : [],
+        });
+      } catch (error) {
+        setError("Error fetching issue details. Please try again later.");
+      }
+      setLoading(false);
+    };
+
+    fetchIssue();
+  }, [issueId]);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <Alert status="error" mt="100px">
+        <AlertIcon />
+        {error}
+      </Alert>
+    );
+  }
 
   if (!issue) {
     return <div>Issue not found</div>;

@@ -1,6 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Flex, Grid, Select, Button, Textarea, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Grid,
+  Select,
+  Button,
+  Textarea,
+  Text,
+  Spinner,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -13,19 +23,61 @@ import Comments from "components/Common/IssueDetailComponents/Comments";
 
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 
-import { issuesData, developers } from "variables/issuesData";
+import {
+  getIssueById,
+  updateIssueStatus,
+  updateIssuePlan,
+} from "../../../services/issueApi";
+import { developers } from "variables/issuesData"; // Mock data for now
 
 function IssueDetail() {
   let { issueId } = useParams();
-  const [issue, setIssue] = useState(issuesData[issueId]);
+  const [issue, setIssue] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState("");
   const [selectedDeveloper, setSelectedDeveloper] = useState("");
   const [isEditingPlan, setIsEditingPlan] = useState(false);
-  const [editedImplementationPlan, setEditedImplementationPlan] = useState(
-    issue.implementationPlan
-  );
+  const [editedImplementationPlan, setEditedImplementationPlan] = useState("");
 
   const history = useHistory();
+
+  useEffect(() => {
+    const fetchIssue = async () => {
+      try {
+        const response = await getIssueById(issueId);
+        setIssue({
+          ...response.data.issue,
+          attachedDocuments: Array.isArray(
+            response.data.issue.attachedDocuments
+          )
+            ? response.data.issue.attachedDocuments
+            : [],
+        });
+        setEditedImplementationPlan(
+          response.data.issue.implementationPlan || ""
+        );
+      } catch (error) {
+        setError("Error fetching issue details. Please try again later.");
+      }
+      setLoading(false);
+    };
+
+    fetchIssue();
+  }, [issueId]);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <Alert status="error" mt="100px">
+        <AlertIcon />
+        {error}
+      </Alert>
+    );
+  }
 
   if (!issue) {
     return <div>Issue not found</div>;
@@ -61,23 +113,34 @@ function IssueDetail() {
     history.goBack();
   };
 
-  const handleStatusChange = (event) => {
-    setIssue((prevIssue) => ({
-      ...prevIssue,
-      status: event.target.value,
-    }));
+  const handleStatusChange = async (event) => {
+    const newStatus = event.target.value;
+    try {
+      await updateIssueStatus(issue.id, newStatus);
+      setIssue((prevIssue) => ({
+        ...prevIssue,
+        status: newStatus,
+      }));
+    } catch (error) {
+      setError("Error updating issue status. Please try again later.");
+    }
   };
 
   const handleEditPlan = () => {
     setIsEditingPlan(true);
   };
 
-  const handleSavePlan = () => {
-    setIssue((prevIssue) => ({
-      ...prevIssue,
-      implementationPlan: editedImplementationPlan,
-    }));
-    setIsEditingPlan(false);
+  const handleSavePlan = async () => {
+    try {
+      await updateIssuePlan(issue.id, editedImplementationPlan);
+      setIssue((prevIssue) => ({
+        ...prevIssue,
+        implementationPlan: editedImplementationPlan,
+      }));
+      setIsEditingPlan(false);
+    } catch (error) {
+      setError("Error updating implementation plan. Please try again later.");
+    }
   };
 
   const handleCancelEditPlan = () => {
