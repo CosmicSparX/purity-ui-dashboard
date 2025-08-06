@@ -2,7 +2,7 @@ import Dashboard from "views/Dashboard/Dashboard";
 import Profile from "views/Dashboard/Profile";
 import SignIn from "views/Auth/SignIn.js";
 import UserManagement from "views/Dashboard/UserManagement";
-import ManagerDashboard from "views/Manager/General";
+import ManagerDashboardPage from "views/Manager/General";
 import Projects from "views/Manager/Projects";
 import Issues from "views/Manager/Issues";
 import ProjectDetail from "views/Manager/ProjectDetail";
