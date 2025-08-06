@@ -18,6 +18,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import IssueInfo from "components/Common/IssueDetailComponents/IssueInfo";
 import AssignedToSection from "components/Common/IssueDetailComponents/AssignedToSection";
 import IssueHeader from "components/Common/IssueDetailComponents/IssueHeader";
+
 import AttachedDocumentsSection from "components/Common/IssueDetailComponents/AttachedDocumentsSection";
 import Comments from "components/Common/IssueDetailComponents/Comments";
 
@@ -152,7 +153,7 @@ function IssueDetail() {
     <Flex direction="column" pt={{ base: "120px", md: "75px" }} gap="22px">
       <IssueHeader
         backgroundHeader={ProfileBgImage}
-        issueName={issue.name}
+        issueName={issue.title}
         status={issue.status}
         priority={issue.priority}
         handleGoBack={handleGoBack}
@@ -226,11 +227,11 @@ function IssueDetail() {
               </Text>
             </CardHeader>
             <CardBody pt="20px">
-              <Text fontSize="md">{issue.reportedBy}</Text>
+              <Text fontSize="md">{issue.reporter_id}</Text>
             </CardBody>
           </Card>
           <AssignedToSection
-            assignedTo={issue.assignedTo}
+            assigneeId={issue.assignee_id}
             status={issue.status}
             onAssignClick={handleAssignClick}
             onDeveloperSelect={handleDeveloperSelect}

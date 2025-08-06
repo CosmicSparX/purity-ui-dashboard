@@ -34,14 +34,24 @@ function ProjectDetail() {
     const fetchProject = async () => {
       try {
         const response = await getProjectById(projectId);
+        const issues = Array.isArray(response.data.project.issues)
+          ? response.data.project.issues.map((issue) => ({
+              ...issue,
+              id: issue.ID,
+            }))
+          : [];
+
+        const totalIssues = issues.length;
+        const openIssues = issues.filter((issue) => issue.status !== "Closed")
+          .length;
+        const closedIssues = totalIssues - openIssues;
+
         setProject({
           ...response.data.project,
-          issues: Array.isArray(response.data.project.issues)
-            ? response.data.project.issues.map((issue) => ({
-                ...issue,
-                id: issue.ID,
-              }))
-            : [],
+          issues,
+          totalIssues,
+          openIssues,
+          closedIssues,
         });
       } catch (error) {
         setError("Error fetching project details. Please try again later.");

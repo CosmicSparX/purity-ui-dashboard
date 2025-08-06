@@ -8,10 +8,10 @@ function Comment({ comment }) {
   return (
     <Box bg={bg} p="4" borderRadius="20px">
       <Flex align="center">
-        <Avatar size="sm" name={comment.author} mr="3" />
+        <Avatar size="sm" name={String(comment.author_id)} mr="3" />
         <Box>
-          <Text fontWeight="bold">{comment.author}</Text>
-          <Text>{comment.text}</Text>
+          <Text fontWeight="bold">{comment.author_id}</Text>
+          <Text>{comment.content}</Text>
         </Box>
       </Flex>
     </Box>
@@ -20,8 +20,8 @@ function Comment({ comment }) {
 
 Comment.propTypes = {
   comment: PropTypes.shape({
-    author: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
+    author_id: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
   }).isRequired,
 };
 

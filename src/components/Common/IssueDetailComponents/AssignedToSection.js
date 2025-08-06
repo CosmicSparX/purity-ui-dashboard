@@ -12,7 +12,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 
 function AssignedToSection({
-  assignedTo,
+  assigneeId,
   status,
   onAssignClick,
   onDeveloperSelect,
@@ -20,6 +20,8 @@ function AssignedToSection({
   selectedDeveloper,
 }) {
   const textColor = useColorModeValue("gray.700", "white");
+
+  const assignedDeveloper = developers.find((dev) => dev.id === assigneeId);
 
   return (
     <Card>
@@ -30,9 +32,9 @@ function AssignedToSection({
       </CardHeader>
       <CardBody>
         <Text fontSize="md" color={textColor}>
-          {assignedTo || "Unassigned"}
+          {assignedDeveloper ? assignedDeveloper.name : "Unassigned"}
         </Text>
-        {status === "Open" && !assignedTo && (
+        {status === "Open" && !assignedDeveloper && (
           <Flex mt="4" direction="column">
             <Select
               placeholder="Select developer"
@@ -56,7 +58,7 @@ function AssignedToSection({
 }
 
 AssignedToSection.propTypes = {
-  assignedTo: PropTypes.string,
+  assigneeId: PropTypes.number,
   status: PropTypes.string.isRequired,
   onAssignClick: PropTypes.func.isRequired,
   onDeveloperSelect: PropTypes.func.isRequired,

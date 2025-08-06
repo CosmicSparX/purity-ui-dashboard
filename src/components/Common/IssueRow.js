@@ -12,8 +12,8 @@ function IssueRow({ issue, layout }) {
 
   return (
     <Tr>
-      <Td>{issue.name}</Td>
-      <Td>{issue.project}</Td>
+      <Td>{issue.title}</Td>
+      <Td>{issue.project_id}</Td>
       <Td>{issue.status}</Td>
       <Td>
         <Button onClick={handleIssueClick}>View</Button>
@@ -25,8 +25,8 @@ function IssueRow({ issue, layout }) {
 IssueRow.propTypes = {
   issue: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    project: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    project_id: PropTypes.number.isRequired,
     status: PropTypes.string.isRequired,
   }).isRequired,
   layout: PropTypes.string.isRequired,

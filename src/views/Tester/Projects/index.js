@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Table,
@@ -7,8 +7,6 @@ import {
   Tr,
   Th,
   useColorModeValue,
-  Input,
-  Checkbox,
   Text,
   Spinner,
   Alert,
@@ -21,11 +19,7 @@ import ProjectRow from "components/Common/ProjectRow";
 import { getProjects } from "../../../services/issueApi";
 
 function Projects() {
-  const userRole = "tester"; // This will be dynamic based on logged-in user
-  const userId = "tester1"; // This will be dynamic based on logged-in user
   const textColor = useColorModeValue("gray.700", "white");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showCriticalOnly, setShowCriticalOnly] = useState(false);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,10 +30,32 @@ function Projects() {
         const response = await getProjects();
         setProjects(
           Array.isArray(response.data.projects)
-            ? response.data.projects.map((project) => ({
-                ...project,
-                id: project.ID,
-              }))
+            ? response.data.projects.map((project) => {
+                const issues = Array.isArray(project.issues)
+                  ? project.issues.map((issue) => ({
+                      ...issue,
+                      id: issue.ID,
+                    }))
+                  : [];
+
+                const openIssues = issues.filter(
+                  (issue) => issue.status !== "Closed"
+                ).length;
+                const closedIssues = issues.length - openIssues;
+                const criticalOpenIssues = issues.filter(
+                  (issue) =>
+                    issue.status !== "Closed" && issue.priority === "High"
+                ).length;
+
+                return {
+                  ...project,
+                  id: project.ID,
+                  issues,
+                  openIssues,
+                  closedIssues,
+                  criticalOpenIssues,
+                };
+              })
             : []
         );
       } catch (error) {
@@ -50,30 +66,6 @@ function Projects() {
 
     fetchProjects();
   }, []);
-
-  const filteredProjects = useMemo(() => {
-    let tempProjects = projects;
-
-    if (searchTerm) {
-      tempProjects = tempProjects.filter((project) =>
-        project.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (showCriticalOnly) {
-      tempProjects = tempProjects.filter(
-        (project) => project.criticalOpenIssues > 0
-      );
-    }
-
-    if (userRole === "tester") {
-      tempProjects = tempProjects.filter((project) =>
-        project.assignedTo.includes(userId)
-      );
-    }
-
-    return tempProjects;
-  }, [searchTerm, showCriticalOnly, userRole, userId, projects]);
 
   if (loading) {
     return <Spinner />;
@@ -96,23 +88,6 @@ function Projects() {
             <Text fontSize="xl" color={textColor} fontWeight="bold" mb="10px">
               Projects
             </Text>
-            <Flex mb="20px" wrap="wrap" alignItems="center">
-              <Input
-                placeholder="Search projects..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                width={{ base: "100%", md: "250px" }}
-                mr={{ base: "0", md: "20px" }}
-                mb={{ base: "10px", md: "0" }}
-              />
-              <Checkbox
-                isChecked={showCriticalOnly}
-                onChange={(e) => setShowCriticalOnly(e.target.checked)}
-                colorScheme="red"
-              >
-                Show Critical Only
-              </Checkbox>
-            </Flex>
           </Flex>
         </CardHeader>
         <CardBody>
@@ -129,7 +104,7 @@ function Projects() {
               </Tr>
             </Thead>
             <Tbody>
-              {filteredProjects.map((project) => (
+              {projects.map((project) => (
                 <ProjectRow
                   key={project.id}
                   project={project}
