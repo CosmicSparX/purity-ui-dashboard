@@ -1,21 +1,14 @@
 /*eslint-disable*/
 // chakra imports
-import {
-    Box,
-    Button, Flex,
-    Link,
-    Stack,
-    Text,
-    useColorModeValue
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Stack, Text, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import IconBox from "components/Icons/IconBox";
 import { CreativeTimLogo } from "components/Icons/Icons";
 import { Separator } from "components/Separator/Separator";
+import AddIssueModal from "components/AddIssue/AddIssueModal";
+import { FiPlus } from "react-icons/fi";
 
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-
-// this function creates the links and collapses that appear in the sidebar (left menu)
 
 
 const SidebarContent = ({ logoText, routes }) => {
@@ -24,6 +17,18 @@ const SidebarContent = ({ logoText, routes }) => {
   let location = useLocation();
   // this is for the rest of the collapses
   const [state, setState] = React.useState({});
+
+  // Modal state for AddIssueModal
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const onOpenAddIssueModal = () => {
+    onOpen();
+  };
+
+  const handleAddIssue = (newIssue) => {
+    console.log("New Issue Added:", newIssue);
+    // In a real application, you would update your state or send this to a backend
+  };
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -37,7 +42,7 @@ const SidebarContent = ({ logoText, routes }) => {
     const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
-      if (prop.redirect) {
+      if (prop.redirect || prop.invisible) {
         return null;
       }
       if (prop.category) {
@@ -98,9 +103,6 @@ const SidebarContent = ({ logoText, routes }) => {
               }}
             >
               <Flex>
-                {typeof prop.icon === "string" ? (
-                  <Icon>{prop.icon}</Icon>
-                ) : (
                   <IconBox
                     bg="teal.300"
                     color="white"
@@ -108,9 +110,8 @@ const SidebarContent = ({ logoText, routes }) => {
                     w="30px"
                     me="12px"
                   >
-                    {prop.icon}
+                    {prop.icon ? (typeof prop.icon === "string" ? <Icon>{prop.icon}</Icon> : prop.icon) : null}
                   </IconBox>
-                )}
                 <Text color={activeColor} my="auto" fontSize="sm">
                   {document.documentElement.dir === "rtl"
                     ? prop.rtlName
@@ -148,9 +149,6 @@ const SidebarContent = ({ logoText, routes }) => {
               }}
             >
               <Flex>
-                {typeof prop.icon === "string" ? (
-                  <Icon>{prop.icon}</Icon>
-                ) : (
                   <IconBox
                     bg={inactiveBg}
                     color="teal.300"
@@ -158,9 +156,8 @@ const SidebarContent = ({ logoText, routes }) => {
                     w="30px"
                     me="12px"
                   >
-                    {prop.icon}
+                    {prop.icon ? (typeof prop.icon === "string" ? <Icon>{prop.icon}</Icon> : prop.icon) : null}
                   </IconBox>
-                )}
                 <Text color={inactiveColor} my="auto" fontSize="sm">
                   {document.documentElement.dir === "rtl"
                     ? prop.rtlName
@@ -199,8 +196,53 @@ const SidebarContent = ({ logoText, routes }) => {
     </Box>
           <Stack direction="column" mb="40px">
             <Box>{links}</Box>
+            {location.pathname.startsWith("/tester") && (
+              <Button
+                boxSize="initial"
+                justifyContent="flex-start"
+                alignItems="center"
+                bg="transparent"
+                mb={{
+                  xl: "12px",
+                }}
+                mx={{
+                  xl: "auto",
+                }}
+                py="12px"
+                ps={{
+                  sm: "10px",
+                  xl: "16px",
+                }}
+                borderRadius="15px"
+                _hover="none"
+                _active={{
+                  bg: "inherit",
+                  transform: "none",
+                  borderColor: "transparent",
+                }}
+                _focus={{
+                  boxShadow: "none",
+                }}
+                onClick={onOpenAddIssueModal}
+              >
+                <Flex>
+                  <IconBox
+                    bg={useColorModeValue("white", "gray.700")}
+                    color="teal.300"
+                    h="30px"
+                    w="30px"
+                    me="12px"
+                  >
+                    <FiPlus />
+                  </IconBox>
+                  <Text color={useColorModeValue("gray.400", "gray.400")} my="auto" fontSize="sm">
+                    Report New Issue
+                  </Text>
+                </Flex>
+              </Button>
+            )}
           </Stack>
-          
+          <AddIssueModal isOpen={isOpen} onClose={onClose} onAddIssue={handleAddIssue} />
     </>
   )
 }

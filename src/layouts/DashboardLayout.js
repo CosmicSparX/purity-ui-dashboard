@@ -1,6 +1,7 @@
 import { ChakraProvider, Portal, useDisclosure } from "@chakra-ui/react";
 import Configurator from "components/Configurator/Configurator";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
+import AddIssueModal from "components/AddIssue/AddIssueModal";
 import Sidebar from "components/Sidebar";
 import React, { useState, useMemo } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -17,7 +18,13 @@ import PropTypes from "prop-types";
 
 export default function DashboardLayout(props) {
   const { layoutPrefix } = props;
+  const userRole = "tester"; // This will be dynamic based on logged-in user
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isAddIssueModalOpen,
+    onOpen: onOpenAddIssueModal,
+    onClose: onCloseAddIssueModal,
+  } = useDisclosure();
   const [sidebarVariant, setSidebarVariant] = useState("transparent");
   const [fixed, setFixed] = useState(false);
 
@@ -55,16 +62,22 @@ export default function DashboardLayout(props) {
   };
 
   const getActiveRoute = () => {
-    const currentPath = window.location.href;
+    // Get the path after the hash, e.g., "/tester" or "/tester/projects"
+    const currentPath = window.location.hash.substring(1); // Remove the '#'
+
     // Search role-specific routes
     for (const route of userRoutes) {
-      if (route.path && currentPath.indexOf(route.layout + route.path) !== -1) {
+      // Construct the full route path including the layout prefix
+      const fullRoutePath = route.layout + route.path;
+
+      if (route.path && currentPath.startsWith(fullRoutePath)) {
         return route.name;
       }
       // Search shared routes within categories
       if (route.category === "account") {
         for (const view of route.views) {
-          if (currentPath.indexOf(view.path) !== -1) {
+          // For account pages, the path is relative to the root, so we just check view.path
+          if (currentPath.startsWith(view.layout + view.path)) {
             return view.name;
           }
         }
@@ -80,6 +93,8 @@ export default function DashboardLayout(props) {
         logoText={null}
         display="none"
         sidebarVariant={sidebarVariant}
+        onOpenAddIssueModal={onOpenAddIssueModal}
+        userRole={userRole}
       />
       <MainPanel
         w={{
@@ -107,7 +122,7 @@ export default function DashboardLayout(props) {
                       // If it's the account category, map through its views
                       return prop.views.map((view, viewKey) => (
                         <Route
-                          path={layoutPrefix + view.path}
+                          path={view.layout + view.path}
                           component={view.component}
                           key={viewKey}
                         />
@@ -119,16 +134,22 @@ export default function DashboardLayout(props) {
                           path={prop.layout + prop.path}
                           component={prop.component}
                           key={key}
+                          exact={prop.exact}
                         />
                       );
                     }
                   })
                 }
-                <Redirect
-                  exact
-                  from={layoutPrefix}
-                  to={`${layoutPrefix}/dashboard`}
-                />
+                <Route>
+                  <Redirect
+                    to={
+                      layoutPrefix === "/developer" ||
+                      layoutPrefix === "/tester"
+                        ? `${layoutPrefix}/projects`
+                        : `${layoutPrefix}/dashboard`
+                    }
+                  />
+                </Route>
               </Switch>
             </PanelContainer>
           </PanelContent>
@@ -148,6 +169,13 @@ export default function DashboardLayout(props) {
           onTransparent={() => setSidebarVariant("transparent")}
         />
       </MainPanel>
+      <AddIssueModal
+        isOpen={isAddIssueModalOpen}
+        onClose={onCloseAddIssueModal}
+        onAddIssue={(newIssue) =>
+          console.log("Issue added from DashboardLayout:", newIssue)
+        }
+      />
     </ChakraProvider>
   );
 }

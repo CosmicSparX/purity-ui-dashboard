@@ -1,0 +1,170 @@
+import React, { useState, useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
+import CardHeader from "components/Card/CardHeader.js";
+import { Flex, Grid, Text, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
+
+import Comments from "components/Common/IssueDetailComponents/Comments";
+import IssueInfo from "components/Common/IssueDetailComponents/IssueInfo";
+import AssignedToSection from "components/Common/IssueDetailComponents/AssignedToSection";
+import IssueHeader from "components/Common/IssueDetailComponents/IssueHeader";
+import AttachedDocumentsSection from "components/Common/IssueDetailComponents/AttachedDocumentsSection";
+
+import ProfileBgImage from "assets/img/ProfileBackground.png";
+
+import { getIssueById, assignIssue } from "../../../services/issueApi";
+import { developers } from "variables/issuesData"; // Mock data for now
+
+function IssueDetail() {
+  let { issueId } = useParams();
+
+  const [issue, setIssue] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [newComment, setNewComment] = useState("");
+  const [selectedDeveloper, setSelectedDeveloper] = useState("");
+
+  const history = useHistory();
+
+  useEffect(() => {
+    const fetchIssue = async () => {
+      try {
+        const response = await getIssueById(issueId);
+        setIssue({
+          ...response.data.issue,
+          attachedDocuments: Array.isArray(
+            response.data.issue.attachedDocuments
+          )
+            ? response.data.issue.attachedDocuments
+            : [],
+        });
+      } catch (error) {
+        setError("Error fetching issue details. Please try again later.");
+      }
+      setLoading(false);
+    };
+
+    fetchIssue();
+  }, [issueId]);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <Alert status="error" mt="100px">
+        <AlertIcon />
+        {error}
+      </Alert>
+    );
+  }
+
+  if (!issue) {
+    return <div>Issue not found</div>;
+  }
+
+  const handleCommentChange = (event) => {
+    setNewComment(event.target.value);
+  };
+
+  const handleCommentSubmit = () => {
+    // Here you would typically send the new comment to the server
+    console.log("New comment submitted:", newComment);
+    setNewComment("");
+  };
+
+  const handleDeveloperSelect = (event) => {
+    setSelectedDeveloper(event.target.value);
+  };
+
+  const handleAssignClick = async () => {
+    if (selectedDeveloper) {
+      try {
+        await assignIssue(issue.id, selectedDeveloper);
+        setIssue((prevIssue) => ({
+          ...prevIssue,
+          assignedTo: selectedDeveloper,
+          status: "In Progress",
+        }));
+        setSelectedDeveloper("");
+      } catch (error) {
+        setError("Error assigning issue. Please try again later.");
+      }
+    }
+  };
+
+  const handleGoBack = () => {
+    history.goBack();
+  };
+
+  return (
+    <Flex direction="column" pt={{ base: "120px", md: "75px" }} gap="22px">
+      <IssueHeader
+        backgroundHeader={ProfileBgImage}
+        issueName={issue.title}
+        status={issue.status}
+        priority={issue.priority}
+        handleGoBack={handleGoBack}
+        projectId={issue.projectId}
+        issueId={issue.id}
+      />
+
+      <Grid templateColumns={{ sm: "1fr", lg: "2fr 1fr" }} gap="22px">
+        <Flex direction="column" gap="22px">
+          <Grid templateColumns={{ sm: "1fr", md: "1fr 1fr" }} gap="22px">
+            <IssueInfo description={issue.description} />
+            <AttachedDocumentsSection
+              attachedDocuments={issue.attachedDocuments}
+            />
+          </Grid>
+          <Card>
+            <CardHeader
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Text fontSize="lg" fontWeight="bold">
+                Implementation Plan
+              </Text>
+            </CardHeader>
+            <CardBody pt="20px">
+              <Text fontSize="md" mb="10px">
+                {issue.implementationPlan || "No implementation plan yet."}
+              </Text>
+            </CardBody>
+          </Card>
+        </Flex>
+        <Flex direction="column" gap="22px">
+          <Card>
+            <CardHeader>
+              <Text fontSize="lg" fontWeight="bold">
+                Reported By
+              </Text>
+            </CardHeader>
+            <CardBody pt="20px">
+              <Text fontSize="md">{issue.reporter_id}</Text>
+            </CardBody>
+          </Card>
+          <AssignedToSection
+            assigneeId={issue.assignee_id}
+            status={issue.status}
+            onAssignClick={handleAssignClick}
+            onDeveloperSelect={handleDeveloperSelect}
+            developers={developers}
+            selectedDeveloper={selectedDeveloper}
+          />
+          <Comments
+            comments={issue.comments}
+            newComment={newComment}
+            onCommentChange={handleCommentChange}
+            onCommentSubmit={handleCommentSubmit}
+          />
+        </Flex>
+      </Grid>
+    </Flex>
+  );
+}
+
+export default IssueDetail;

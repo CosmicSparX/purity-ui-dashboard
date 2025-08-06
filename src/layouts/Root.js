@@ -9,10 +9,16 @@ export default function Root() {
   const { userRole, verifyAndRefreshTokens, loading: authLoading } = useAuth(); // Use authLoading to avoid name collision
 
   useEffect(() => {
+    let isMounted = true;
     const checkAuth = async () => {
       await verifyAndRefreshTokens();
+      // Only update state if the component is still mounted
+      if (!isMounted) return;
     };
     checkAuth();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const getLayoutForRole = (role) => {
@@ -59,7 +65,6 @@ export default function Root() {
     );
   }
 
-  console.log(userRole);
   // If user is logged in, set up the main layout and redirects
   const userLayoutPath = getLayoutForRole(userRole);
 
@@ -90,7 +95,14 @@ export default function Root() {
             <DashboardLayout {...props} layoutPrefix={userLayoutPath} />
           )}
         />
-        <Redirect from="/" to={userLayoutPath} />
+        <Redirect
+          from="/"
+          to={
+            userLayoutPath === "/developer" || userLayoutPath === "/tester"
+              ? `${userLayoutPath}/projects`
+              : `${userLayoutPath}/dashboard`
+          }
+        />
       </Switch>
     </>
   );
